@@ -35,9 +35,13 @@
 #   include <intrin.h>
 #endif
 
+#if defined(__GNUC__)
 #include <inttypes.h>
+#else
+#include "3rdparty/vs/inttypes.h"
+#endif
 
-#include "align.h"
+#include "3rdparty/align.h"
 
 
 #define saes_data(w) {\

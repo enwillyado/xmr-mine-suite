@@ -31,7 +31,7 @@
 #include <string>
 
 
-#include "align.h"
+#include "3rdparty/align.h"
 #include "net/Id.h"
 #include "xmrig.h"
 

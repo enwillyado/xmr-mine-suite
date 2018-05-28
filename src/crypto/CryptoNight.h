@@ -29,7 +29,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "align.h"
+#include "3rdparty/align.h"
 #include "interfaces/interface.h"
 
 #define AEON_MEMORY   0x100000

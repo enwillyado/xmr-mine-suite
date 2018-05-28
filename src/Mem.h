@@ -30,7 +30,7 @@
 #include <stdint.h>
 
 
-#include "align.h"
+#include "3rdparty/align.h"
 
 
 struct cryptonight_ctx;
