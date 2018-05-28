@@ -10,7 +10,7 @@ set FLAGS_COMPILER_CPP=
 set FLAGS_LINKER=-static
 ```
 
-# #Generate "miner" (C++):
+## Generate "miner" (C++):
 
 * You call:
 
