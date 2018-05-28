@@ -10,10 +10,9 @@ set FLAGS_COMPILER_CPP=
 set FLAGS_LINKER=-static
 ```
 
-########################
-#Generate "miner" (C++):
-#
-# You call:
+# #Generate "miner" (C++):
+
+* You call:
 
 ```
 gcc %FLAGS_COMPILER% %FLAGS_COMPILER_C%   -c -I../src/ ../src/crypto/c_blake256.c ../src/crypto/c_groestl.c ../src/crypto/c_jh.c ../src/crypto/c_keccak.c ../src/crypto/c_skein.c
@@ -21,19 +20,19 @@ g++ %FLAGS_COMPILER% %FLAGS_COMPILER_CPP% -c -I../src/ ../src/crypto/CryptoNight
 g++ %FLAGS_LINKER% c_blake256.o c_groestl.o c_jh.o c_keccak.o c_skein.o CryptoNight.o Job.o Mem.o Mem_unix.o Mem_win.o miner.o -o miner.exe
 ```
 
-## You get:
+* You get:
 
 `miner.exe` tool.
 
 ## Demo result
 
-You call:
+* You call:
 
 ```
 miner.exe 07079deab1d805e410406e6f8ae09b8392a3fb338700da850378889983dd3b19c86a9822219cfc0000000047fe7a15a44870c21862e6e96eab0208ce79a8f5bff4cd2469dc94ccdbe6485b02 e4a63d00
 ```
 
-You get:
+* You get:
 
 ```
 00000526
