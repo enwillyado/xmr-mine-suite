@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{6955e425-641d-4a18-acb0-d78893a1871d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\crypto">
+      <UniqueIdentifier>{7e805124-d421-47b2-9d4a-74be33524010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\net">
+      <UniqueIdentifier>{a0a4a5de-7c2b-412b-93f9-9a2947b4e4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{e6f77825-b090-41d5-a52d-ee71ceb43625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{91d9785b-eb95-4697-aad4-64d7fa758c12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\3rdparty">
+      <UniqueIdentifier>{adcb1741-7564-4b29-b419-63faa19fabe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\crypto">
+      <UniqueIdentifier>{89d4683f-f5f4-4f23-a1da-c59d5ed9a30c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\interfaces">
+      <UniqueIdentifier>{f4b9e412-a76d-4b33-85b4-82f73b88dd4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\net">
+      <UniqueIdentifier>{c230f074-3bff-43bf-879c-0bf5f1bd5892}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Mem.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mem_unix.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mem_win.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\CryptoNight.cpp">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\c_blake256.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\c_groestl.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\c_jh.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\c_keccak.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\c_skein.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\net\Job.cpp">
+      <Filter>Archivos de código fuente\net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\miner.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\res\app.rc">
+      <Filter>Archivos de recursos</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\res\app.ico">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\src\config.json">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Mem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\version.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\align.h">
+      <Filter>Archivos de encabezado\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\CryptoNight.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\CryptoNight_arm.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\CryptoNight_test.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\CryptoNight_x86.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_blake256.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_groestl.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_jh.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_keccak.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_skein.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\groestl_tables.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\hash.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\skein_port.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\soft_aes.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\SSE2NEON.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\Job.h">
+      <Filter>Archivos de encabezado\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\JobResult.h">
+      <Filter>Archivos de encabezado\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\interfaces\interface.h">
+      <Filter>Archivos de encabezado\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\net\Id.h">
+      <Filter>Archivos de encabezado\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\aligned_malloc.h">
+      <Filter>Archivos de encabezado\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\inttypes.h">
+      <Filter>Archivos de encabezado\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\stdint.h">
+      <Filter>Archivos de encabezado\3rdparty</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

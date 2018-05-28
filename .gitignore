@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Other
+/build*
+/vs/*/
+*.opensdf
+*.sdf
