@@ -23,9 +23,10 @@
  */
 #ifndef _WIN32
 
+#include <iostream>
+
 #include <stdlib.h>
 #include <sys/mman.h>
-
 
 #if defined(XMRIG_ARM) && !defined(__clang__)
 #   include "aligned_malloc.h"
@@ -35,9 +36,7 @@
 
 
 #include "crypto/CryptoNight.h"
-#include "log/Log.h"
 #include "Mem.h"
-#include "Options.h"
 #include "xmrig.h"
 
 #ifndef MAP_HUGETLB
@@ -89,7 +88,7 @@ bool Mem::allocate(int algo, int threads, bool doubleHash, bool enabled)
 
 	if(madvise(m_memory, m_size, MADV_RANDOM | MADV_WILLNEED) != 0)
 	{
-		LOG_ERR("madvise failed");
+		std::cerr << "madvise failed" << std::endl;
 	}
 
 	if(mlock(m_memory, m_size) == 0)

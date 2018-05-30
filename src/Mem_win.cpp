@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+#ifdef _WIN32
 
 #include <winsock2.h>
 #include <windows.h>
@@ -209,3 +209,5 @@ void Mem::release()
 		_mm_free(m_memory);
 	}
 }
+
+#endif
