@@ -5,6 +5,8 @@
 
 #include "version.h"
 
+#include <stdlib.h>
+
 std::string getString(const char* str, std::string def)
 {
 	if(NULL == str)

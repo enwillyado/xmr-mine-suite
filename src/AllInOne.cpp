@@ -4,7 +4,7 @@
 #include "AllInOne.h"
 
 #include "Miner.h"
-#include "Net/Job.h"
+#include "net/Job.h"
 
 #include <iostream>
 #include <iomanip>
