@@ -53,6 +53,7 @@ public:
 		poolId = job.poolId();
 		diff   = job.diff();
 		nonce  = *job.nonce();
+		memset(this->result, 0, sizeof(this->result));
 	}
 
 

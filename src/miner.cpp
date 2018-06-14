@@ -1,6 +1,7 @@
 /* MINER
  * Only mine a job [$1], iterate nonce target [$2] from start [$3=0] to end [$4=-1].
  */
+#include "Miner.h"
 
 #include "net/Job.h"
 #include "net/JobResult.h"
@@ -12,28 +13,17 @@
 #include <iostream>
 #include <iomanip>
 
-#define DEFAULT_BLOB "07079deab1d805e410406e6f8ae09b8392a3fb338700da850378889983dd3b19c86a9822219cfc0000000047fe7a15a44870c21862e6e96eab0208ce79a8f5bff4cd2469dc94ccdbe6485b02"
-#define DEFAULT_TARGET "e4a63d00"
-
-std::string getString(const char* str, std::string def)
+int Miner::Exec(const std::string & blob, const std::string & target)
 {
-	if(NULL == str)
-	{
-		return def;
-	}
-	return str;
+	return Miner::Exec(blob, target, NULL, 0);
 }
 
-int main(int argc, char** argv)
+int Miner::Exec(const std::string & blob, const std::string & target, const OnNonce onNonce,
+                const size_t & actual)
 {
-	// Params:
-	//
-	std::string blob = getString(argc > 1 ? argv[1] : NULL, DEFAULT_BLOB);
-	std::string target = getString(argc > 2 ? argv[2] : NULL, DEFAULT_TARGET);
-
 	// Create and set job
 	//
-	Job job(0, false, xmrig::ALGO_CRYPTONIGHT, xmrig::VARIANT_V1);
+	Job job(0, false, xmrig::ALGO_CRYPTONIGHT, xmrig::VARIANT_V1, xmrig::MODE_CPU);
 	if(!job.setBlob(blob.c_str()))
 	{
 		std::cerr << "Blob fail" << std::endl;
@@ -61,7 +51,7 @@ int main(int argc, char** argv)
 
 	// Initialice algorithm
 	//
-	if(false == CryptoNight::init(job.getAlgo(), false, job.getVariant()))
+	if(false == CryptoNight::init(job.getAlgo(), false, job.getMode()))
 	{
 		std::cerr << "Algo init fail" << std::endl;
 		return 2;
@@ -71,16 +61,25 @@ int main(int argc, char** argv)
 
 	// Start hashing
 	//
-	while(true)
+	size_t started = actual;
+	while(started == actual)
 	{
 		if(CryptoNight::hash(job, result, context))
 		{
 			// Share match
 			//
 			std::cout << "M:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;
+
+			if(NULL != onNonce)
+			{
+				onNonce(*job.nonce(), result.result);
+			}
 		}
 
-		++(*job.nonce());
+		if(0 == (++(*job.nonce()) % 0x100))
+		{
+			std::cout << "X:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;
+		}
 	}
 
 	std::cout << "E:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;

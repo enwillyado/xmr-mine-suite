@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de código fuente">
+      <UniqueIdentifier>{6955e425-641d-4a18-acb0-d78893a1871d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{e6f77825-b090-41d5-a52d-ee71ceb43625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{91d9785b-eb95-4697-aad4-64d7fa758c12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\w_sistema">
+      <UniqueIdentifier>{f7f801c9-f540-4d98-88fd-9ebec6b1eca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\vs">
+      <UniqueIdentifier>{560fbc9d-51f5-4e12-bc93-0d3600d9e585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\w_sistema">
+      <UniqueIdentifier>{fb8d33e8-c54f-4ead-a28c-17239b6447f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\w_tcp">
+      <UniqueIdentifier>{45501e16-be04-4305-9a4a-7346e84d7080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\w_tcp">
+      <UniqueIdentifier>{7ebc6113-9bfe-4486-96cd-ec80d4f8335c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\res\app.rc">
+      <Filter>Archivos de recursos</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\res\app.ico">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="..\src\config.json">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_comun.cpp">
+      <Filter>Archivos de código fuente\w_sistema</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_unix.cpp">
+      <Filter>Archivos de código fuente\w_sistema</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_win.cpp">
+      <Filter>Archivos de código fuente\w_sistema</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdparty\w_tcp\tcpclient.cpp">
+      <Filter>Archivos de código fuente\w_tcp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\3rdparty\w_sistema\w_sistema_thread.h">
+      <Filter>Archivos de encabezado\w_sistema</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\w_tcp\tcpclient.h">
+      <Filter>Archivos de encabezado\w_tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\aligned_malloc.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\align.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\vs\inttypes.h">
+      <Filter>Archivos de encabezado\vs</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -151,17 +151,17 @@ bool CryptoNight::hash(const Job & job, JobResult & result, cryptonight_ctx* ctx
 }
 
 
-bool CryptoNight::init(int algo, const bool doubleHash, int variant)
+bool CryptoNight::init(int algo, const bool doubleHash, int mode)
 {
-	if(variant < 1 || variant > 4)
+	if(mode < 1 || mode > 4)
 	{
 		return false;
 	}
 
 #   ifndef XMRIG_NO_AEON
-	const int index = algo == xmrig::ALGO_CRYPTONIGHT_LITE ? (variant + 3) : (variant - 1);
+	const int index = algo == xmrig::ALGO_CRYPTONIGHT_LITE ? (mode + 3) : (mode - 1);
 #   else
-	const int index = variant - 1;
+	const int index = mode - 1;
 #   endif
 
 	cryptonight_hash_ctx = cryptonight_variations[index];

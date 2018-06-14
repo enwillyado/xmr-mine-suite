@@ -16,9 +16,6 @@
     <Filter Include="Archivos de encabezado">
       <UniqueIdentifier>{91d9785b-eb95-4697-aad4-64d7fa758c12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\3rdparty">
-      <UniqueIdentifier>{adcb1741-7564-4b29-b419-63faa19fabe0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\crypto">
       <UniqueIdentifier>{89d4683f-f5f4-4f23-a1da-c59d5ed9a30c}</UniqueIdentifier>
     </Filter>
@@ -60,7 +57,7 @@
     <ClCompile Include="..\src\net\Job.cpp">
       <Filter>Archivos de código fuente\net</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\miner.cpp">
+    <ClCompile Include="..\src\Miner.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
@@ -83,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="..\src\version.h">
       <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\3rdparty\align.h">
-      <Filter>Archivos de encabezado\3rdparty</Filter>
     </ClInclude>
     <ClInclude Include="..\src\crypto\CryptoNight.h">
       <Filter>Archivos de encabezado\crypto</Filter>
@@ -141,14 +135,8 @@
     <ClInclude Include="..\src\net\Id.h">
       <Filter>Archivos de encabezado\net</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\3rdparty\aligned_malloc.h">
-      <Filter>Archivos de encabezado\3rdparty</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\3rdparty\inttypes.h">
-      <Filter>Archivos de encabezado\3rdparty</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\3rdparty\stdint.h">
-      <Filter>Archivos de encabezado\3rdparty</Filter>
+    <ClInclude Include="..\src\Miner.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

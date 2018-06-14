@@ -40,7 +40,7 @@ class Job
 {
 public:
 	Job();
-	Job(int poolId, bool nicehash, int algo, int variant);
+	Job(int poolId, bool nicehash, int algo, int variant, int mode);
 	~Job();
 
 	const std::string & getBlobStr() const
@@ -69,6 +69,10 @@ public:
 	inline int getVariant() const
 	{
 		return m_variant;
+	}
+	inline int getMode() const
+	{
+		return m_mode;
 	}
 	inline unsigned short getInstanceId() const
 	{
@@ -173,6 +177,7 @@ private:
 	int m_poolId;
 	int m_threadId;
 	int m_variant;
+	int m_mode;
 	size_t m_size;
 	uint64_t m_diff;
 	uint64_t m_target;

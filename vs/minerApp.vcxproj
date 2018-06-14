@@ -27,19 +27,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\crypto\CryptoNight.cpp" />
-    <ClCompile Include="..\src\crypto\c_blake256.c" />
-    <ClCompile Include="..\src\crypto\c_groestl.c" />
-    <ClCompile Include="..\src\crypto\c_jh.c" />
-    <ClCompile Include="..\src\crypto\c_keccak.c" />
-    <ClCompile Include="..\src\crypto\c_skein.c" />
-    <ClCompile Include="..\src\Mem.cpp" />
-    <ClCompile Include="..\src\Mem_unix.cpp" />
-    <ClCompile Include="..\src\Mem_win.cpp" />
-    <ClCompile Include="..\src\Miner.cpp" />
-    <ClCompile Include="..\src\net\Job.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="..\res\app.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -49,51 +36,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\crypto\CryptoNight.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_arm.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_test.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_x86.h" />
-    <ClInclude Include="..\src\crypto\c_blake256.h" />
-    <ClInclude Include="..\src\crypto\c_groestl.h" />
-    <ClInclude Include="..\src\crypto\c_jh.h" />
-    <ClInclude Include="..\src\crypto\c_keccak.h" />
-    <ClInclude Include="..\src\crypto\c_skein.h" />
-    <ClInclude Include="..\src\crypto\groestl_tables.h" />
-    <ClInclude Include="..\src\crypto\hash.h" />
-    <ClInclude Include="..\src\crypto\skein_port.h" />
-    <ClInclude Include="..\src\crypto\soft_aes.h" />
-    <ClInclude Include="..\src\crypto\SSE2NEON.h" />
-    <ClInclude Include="..\src\interfaces\interface.h" />
-    <ClInclude Include="..\src\Mem.h" />
-    <ClInclude Include="..\src\Miner.h" />
-    <ClInclude Include="..\src\net\Id.h" />
-    <ClInclude Include="..\src\net\Job.h" />
-    <ClInclude Include="..\src\net\JobResult.h" />
     <ClInclude Include="..\src\version.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\minerApp.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>miner</ProjectName>
-    <ProjectGuid>{92BDBA37-96E3-4D85-B762-185E4407BB49}</ProjectGuid>
+    <ProjectName>minerApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-debug|Win32'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-debug|x64'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-release|Win32'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-releasex|Win32'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
@@ -152,10 +103,9 @@
       <ProgramDatabaseFile>$(ProjectName)$(Platform)d.pdb</ProgramDatabaseFile>
       <MapExports>true</MapExports>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX64</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
     <ClCompile>
@@ -177,10 +127,9 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX64</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
     <ClCompile>
@@ -204,10 +153,9 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX64</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-debug|Win32'">
     <ClCompile>
@@ -226,10 +174,9 @@
       <MapExports>true</MapExports>
       <AssemblyDebug>true</AssemblyDebug>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|Win32'">
     <ClCompile>
@@ -252,10 +199,9 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|Win32'">
     <ClCompile>
@@ -280,10 +226,9 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
-    <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

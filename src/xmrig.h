@@ -38,7 +38,13 @@ namespace xmrig
 	{
 		VARIANT_AUTO = -1,
 		VARIANT_NONE = 0,
-		VARIANT_V1   = 1
+		VARIANT_V1   = 1,
+	};
+
+	enum Mode
+	{
+		MODE_CPU = 1,
+		MODE_SOFTWARE = 2,
 	};
 
 } /* xmrig */

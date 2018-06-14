@@ -70,6 +70,7 @@ Job::Job() :
 	m_poolId(-2),
 	m_threadId(-1),
 	m_variant(xmrig::VARIANT_AUTO),
+	m_mode(xmrig::MODE_CPU),
 	m_size(0),
 	m_diff(0),
 	m_target(0),
@@ -78,7 +79,7 @@ Job::Job() :
 }
 
 
-Job::Job(int poolId, bool nicehash, int algo, int variant) :
+Job::Job(int poolId, bool nicehash, int algo, int variant, int mode) :
 	m_nicehash(nicehash),
 	m_instanceId(0),
 	m_instances(0),
@@ -89,6 +90,7 @@ Job::Job(int poolId, bool nicehash, int algo, int variant) :
 	m_poolId(poolId),
 	m_threadId(-1),
 	m_variant(variant),
+	m_mode(mode),
 	m_size(0),
 	m_diff(0),
 	m_target(0),
