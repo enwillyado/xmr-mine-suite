@@ -45,10 +45,10 @@
 #define DEFAULT_BLOB "07079deab1d805e410406e6f8ae09b8392a3fb338700da850378889983dd3b19c86a9822219cfc0000000047fe7a15a44870c21862e6e96eab0208ce79a8f5bff4cd2469dc94ccdbe6485b02"
 #define DEFAULT_TARGET "e4a63d00"
 
-#define APP_ID        "xmrig-eWa" APP_SSL_STR APP_DEBUG_STR
-#define APP_NAME      "XMRig-eWa" APP_SSL_STR APP_DEBUG_STR
-#define APP_DESC      "XMRig CPU miner-eWa" APP_SSL_STR APP_DEBUG_STR
-#define APP_VERSION   "3.4.0-6"
+#define APP_ID        "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
+#define APP_NAME      "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
+#define APP_DESC      "XMR-eWa suite: CPU version " APP_SSL_STR APP_DEBUG_STR
+#define APP_VERSION   "0.0.1-1"
 #define APP_DOMAIN    "enWILLYado.com"
 #define APP_SITE      "www.enWILLYado.com"
 #define APP_COPYRIGHT "CC enWILLYado.com"
