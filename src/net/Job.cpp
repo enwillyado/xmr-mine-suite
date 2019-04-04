@@ -183,6 +183,18 @@ bool Job::setTarget(const char* target)
 	return true;
 }
 
+bool Job::setHeight(const int height)
+{
+	if(height < 0)
+	{
+		return false;
+	}
+	
+	m_height = height;
+
+	return true;
+}
+
 void Job::setCoin(const std::string & coin)
 {
 	if(m_coin.size() == 0 || m_coin.size() > 4)

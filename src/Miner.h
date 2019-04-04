@@ -1,5 +1,5 @@
 /* MINER
- * Only mine a job [$1], iterate nonce target [$2] from start [$3=0] to end [$4=-1].
+ * Only mine a job with blob [$1], locking for the nonce target [$2] in height [$3] from start [$4=0] to end [$5=-1].
  */
 
 #include <string>
@@ -9,9 +9,9 @@
 class Miner
 {
 public:
-	static int Exec(const std::string & blob, const std::string & target);
+	static int Exec(const std::string & blob, const std::string & target, const std::string & height);
 
 	typedef void (*OnNonce)(const uint32_t & nonce, const uint8_t result[32]);
-	static int Exec(const std::string & blob, const std::string & target, const OnNonce onNonce,
-	                const size_t & started);
+	static int Exec(const std::string & blob, const std::string & target, const std::string & height,
+					const OnNonce onNonce, const size_t & started);
 };

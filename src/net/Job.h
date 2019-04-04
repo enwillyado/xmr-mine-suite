@@ -55,6 +55,7 @@ public:
 
 	bool setBlob(const char* blob);
 	bool setTarget(const char* target);
+	bool setHeight(const int height);
 	void setCoin(const std::string & coin);
 	void setVariant(int variant);
 
@@ -178,6 +179,7 @@ private:
 	int m_threadId;
 	int m_variant;
 	int m_mode;
+	int m_height;
 	size_t m_size;
 	uint64_t m_diff;
 	uint64_t m_target;

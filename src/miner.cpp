@@ -13,13 +13,13 @@
 #include <iostream>
 #include <iomanip>
 
-int Miner::Exec(const std::string & blob, const std::string & target)
+int Miner::Exec(const std::string & blob, const std::string & target, const std::string & height)
 {
-	return Miner::Exec(blob, target, NULL, 0);
+	return Miner::Exec(blob, target, height, NULL, 0);
 }
 
-int Miner::Exec(const std::string & blob, const std::string & target, const OnNonce onNonce,
-                const size_t & actual)
+int Miner::Exec(const std::string & blob, const std::string & target, const std::string & height,
+				const OnNonce onNonce, const size_t & actual)
 {
 	// Create and set job
 	//
@@ -36,6 +36,12 @@ int Miner::Exec(const std::string & blob, const std::string & target, const OnNo
 		return 4;
 	}
 
+	if(!job.setHeight(atoi(height.c_str())))
+	{
+		std::cerr << "Height fail" << std::endl;
+		return 5;
+	}
+
 	// Create result from job
 	//
 	JobResult result(job);
@@ -47,6 +53,7 @@ int Miner::Exec(const std::string & blob, const std::string & target, const OnNo
 		std::cerr << "Mem allocate fail" << std::endl;
 		return 1;
 	}
+	
 	cryptonight_ctx* context = Mem::create(0);
 
 	// Initialice algorithm
