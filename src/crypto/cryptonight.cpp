@@ -27,6 +27,8 @@
 #include "net/Job.h"
 #include "net/JobResult.h"
 
+#include <cstdio>
+
 bool CryptoNight::hash(const Job & job, JobResult & result, cryptonight_ctx** ctx)
 {
 	switch(job.variant())
