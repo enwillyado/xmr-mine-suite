@@ -32,6 +32,7 @@ enum Assembly
 
 #include <stdlib.h>
 #include <sys/mman.h>
+#include <cstdio>
 
 void *Mem__allocateExecutableMemory(size_t size)
 {
