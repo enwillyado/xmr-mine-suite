@@ -143,25 +143,26 @@ void* createServer(void* data)
 	return data;
 }
 
-int Finder::Exec(const std::string & host, const int port, const std::string & user, const std::string & pass,
+int Finder::Exec(const int workers_tcp_port,
+				 const std::string & serverhost, const int serverport, const std::string & user, const std::string & pass,
                  const std::string & agent)
 {
 	// create workers
 	Workers::GetInstance();
 	
-	// create server
-	PrivateWorkers server;
-	if(false == server.create(DEFAULT_SERVER_PORT))
+	// create proxy server
+	PrivateWorkers workers_server;
+	if(false == workers_server.create(workers_tcp_port))
 	{
-		std::cerr << "Fail to create server" << std::endl;
+		std::cerr << "Fail to create workers_server" << std::endl;
 		return -1;
 	}
 	
     pthread_t server_p_thread;
-    int server_thr_id = pthread_create(&server_p_thread, NULL, createServer, (void*)&server);
+    int server_thr_id = pthread_create(&server_p_thread, NULL, createServer, (void*)&workers_server);
 	if(server_thr_id < 0)
 	{
-		std::cerr << "Fail to start server" << std::endl;
+		std::cerr << "Fail to start workers_server" << std::endl;
 		return -1;
 	}
 	
@@ -169,8 +170,8 @@ int Finder::Exec(const std::string & host, const int port, const std::string & u
 	//
 	PrivateFinder c;
 
-	//connect to host
-	c.conn(host, port);
+	//connect to server
+	c.conn(serverhost, serverport);
 	
 	const std::string & str = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
 							"\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}";
