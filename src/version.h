@@ -25,6 +25,7 @@
 #define __VERSION_H__
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #ifndef XMRIG_NO_SSL
 #define APP_SSL_STR   "-SSL"

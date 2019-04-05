@@ -26,7 +26,7 @@ void OnNonce(const uint32_t & nonce, const uint8_t result[32])
 	str << std::hex << std::setw(8) << std::setfill('0') << nonce;
 	str.flush();
 	
-	if(system((std::string("/xmrig/proxy?q=nonce\\&nonce=") + str.str() + " & ").c_str()))
+	if(system((std::string("/xmrig/proxy?\\&q=nonce\\&nonce=") + str.str() + "\\&").c_str()))
 	{
 		std::cerr << "Fail to send nonce" << std::endl;
 	}
