@@ -60,44 +60,15 @@ static inline char hf_bin2hex(unsigned char c)
 
 
 Job::Job() :
-	m_nicehash(false),
-	m_instanceId(0),
-	m_instances(0),
-	m_coin(),
 	m_blob_str(),
 	m_target_str(),
-	m_algo(xmrig::ALGO_CRYPTONIGHT),
-	m_poolId(-2),
-	m_threadId(-1),
-	m_variant(xmrig::VARIANT_AUTO),
-	m_mode(xmrig::MODE_CPU),
+	m_variant(VARIANT_AUTO),
 	m_size(0),
 	m_diff(0),
 	m_target(0),
-	m_id()
+	m_height(0)
 {
 }
-
-
-Job::Job(int poolId, bool nicehash, int algo, int variant, int mode) :
-	m_nicehash(nicehash),
-	m_instanceId(0),
-	m_instances(0),
-	m_coin(),
-	m_blob_str(),
-	m_target_str(),
-	m_algo(algo),
-	m_poolId(poolId),
-	m_threadId(-1),
-	m_variant(variant),
-	m_mode(mode),
-	m_size(0),
-	m_diff(0),
-	m_target(0),
-	m_id()
-{
-}
-
 
 Job::~Job()
 {
@@ -126,11 +97,6 @@ bool Job::setBlob(const char* blob)
 	if(!fromHex(blob, (int) m_size * 2, m_blob))
 	{
 		return false;
-	}
-
-	if(*nonce() != 0 && !m_nicehash)
-	{
-		m_nicehash = true;
 	}
 
 	m_blob_str = blob;
@@ -183,42 +149,22 @@ bool Job::setTarget(const char* target)
 	return true;
 }
 
-bool Job::setHeight(const int height)
+bool Job::setHeight(const uint64_t height)
 {
-	if(height < 0)
-	{
-		return false;
-	}
-	
 	m_height = height;
 
 	return true;
 }
 
-void Job::setCoin(const std::string & coin)
-{
-	if(m_coin.size() == 0 || m_coin.size() > 4)
-	{
-		m_coin.clear();
-		return;
-	}
-
-	m_coin = coin;
-#ifndef XMRIG_NO_AEON
-	m_algo = (m_coin != "AEON") ? xmrig::ALGO_CRYPTONIGHT_LITE : xmrig::ALGO_CRYPTONIGHT;
-#else
-	m_algo = xmrig::ALGO_CRYPTONIGHT;
-#endif
-}
-
-
-void Job::setVariant(int variant)
+void Job::setVariant(Variant variant)
 {
 	switch(variant)
 	{
-	case xmrig::VARIANT_AUTO:
-	case xmrig::VARIANT_NONE:
-	case xmrig::VARIANT_V1:
+	case VARIANT_AUTO:
+	case VARIANT_0:
+	case VARIANT_1:
+	case VARIANT_2:
+	case VARIANT_4:
 		m_variant = variant;
 		break;
 
@@ -262,7 +208,7 @@ bool Job::toHex(const char* const in, const size_t size, char* out)
 
 bool Job::operator==(const Job & other) const
 {
-	return m_id == other.m_id && memcmp(m_blob, other.m_blob, sizeof(m_blob)) == 0;
+	return memcmp(m_blob, other.m_blob, sizeof(m_blob)) == 0;
 }
 
 

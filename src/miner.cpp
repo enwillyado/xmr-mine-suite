@@ -6,9 +6,7 @@
 #include "net/Job.h"
 #include "net/JobResult.h"
 
-#include "Mem.h"
-
-#include "crypto/CryptoNight.h"
+#include "crypto/cryptonight.h"
 
 #include <iostream>
 #include <iomanip>
@@ -23,7 +21,8 @@ int Miner::Exec(const std::string & blob, const std::string & target, const std:
 {
 	// Create and set job
 	//
-	Job job(0, false, xmrig::ALGO_CRYPTONIGHT, xmrig::VARIANT_V1, xmrig::MODE_CPU);
+	Job job;
+	
 	if(!job.setBlob(blob.c_str()))
 	{
 		std::cerr << "Blob fail" << std::endl;
@@ -42,36 +41,21 @@ int Miner::Exec(const std::string & blob, const std::string & target, const std:
 		return 5;
 	}
 
+	struct cryptonight_ctx ctx0, ctx1;
+	struct cryptonight_ctx* ctx[2] = {&ctx0, &ctx1};
+	
 	// Create result from job
 	//
 	JobResult result(job);
 
-	// Allocate memory
-	//
-	if(false == Mem::allocate(job.getAlgo(), 1, false, true))
-	{
-		std::cerr << "Mem allocate fail" << std::endl;
-		return 1;
-	}
-	
-	cryptonight_ctx* context = Mem::create(0);
-
-	// Initialice algorithm
-	//
-	if(false == CryptoNight::init(job.getAlgo(), false, job.getMode()))
-	{
-		std::cerr << "Algo init fail" << std::endl;
-		return 2;
-	}
-
-	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;
+	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ":" << (int)job.variant() << ";" << std::endl;
 
 	// Start hashing
 	//
 	size_t started = actual;
 	while(started == actual)
 	{
-		if(CryptoNight::hash(job, result, context))
+		if(CryptoNight::hash(job, result, ctx))
 		{
 			// Share match
 			//

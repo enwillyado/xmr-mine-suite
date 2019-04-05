@@ -25,22 +25,26 @@
 #ifndef __JOB_H__
 #define __JOB_H__
 
-
 #include <stddef.h>
 #include <stdint.h>
 #include <string>
 
-
 #include "3rdparty/align.h"
-#include "net/Id.h"
-#include "xmrig.h"
 
+enum Variant
+{
+	VARIANT_AUTO = -1, // Autodetect
+	VARIANT_0    =  0,  // Original CryptoNight or CryptoNight-Heavy
+	VARIANT_1    =  1,  // CryptoNight variant 1 also known as Monero7 and CryptoNightV7
+	VARIANT_2    =  2,  // CryptoNight variant 2
+	VARIANT_4    = 14, // CryptoNightR (Monero's variant 4)
+	VARIANT_MAX
+};
 
 class Job
 {
 public:
 	Job();
-	Job(int poolId, bool nicehash, int algo, int variant, int mode);
 	~Job();
 
 	const std::string & getBlobStr() const
@@ -55,46 +59,9 @@ public:
 
 	bool setBlob(const char* blob);
 	bool setTarget(const char* target);
-	bool setHeight(const int height);
-	void setCoin(const std::string & coin);
-	void setVariant(int variant);
-
-	inline bool isNicehash() const
-	{
-		return m_nicehash;
-	}
-	inline int getAlgo() const
-	{
-		return m_algo;
-	}
-	inline int getVariant() const
-	{
-		return m_variant;
-	}
-	inline int getMode() const
-	{
-		return m_mode;
-	}
-	inline unsigned short getInstanceId() const
-	{
-		return m_instanceId;
-	}
-	inline unsigned short getInstances() const
-	{
-		return m_instances;
-	}
-	inline bool isValid() const
-	{
-		return m_size > 0 && m_diff > 0;
-	}
-	inline bool setId(const std::string & id)
-	{
-		return m_id.setId(id);
-	}
-	inline const std::string & coin() const
-	{
-		return m_coin;
-	}
+	bool setHeight(const uint64_t height);
+	void setVariant(Variant variant);
+	
 	inline const uint32_t* nonce() const
 	{
 		return reinterpret_cast<const uint32_t*>(m_blob + 39);
@@ -103,21 +70,12 @@ public:
 	{
 		return m_blob;
 	}
-	inline const xmrig::Id & id() const
+	
+	inline Variant variant() const
 	{
-		return m_id;
-	}
-	inline int poolId() const
-	{
-		return m_poolId;
-	}
-	inline int threadId() const
-	{
-		return m_threadId;
-	}
-	inline int variant() const
-	{
-		return (m_variant == xmrig::VARIANT_AUTO ? (m_blob[0] > 6 ? 1 : 0) : m_variant);
+		return (m_variant == VARIANT_AUTO ? (m_blob[0] >= 10) ? VARIANT_4  :
+											((m_blob[0] >= 8) ? VARIANT_2  : 
+															    VARIANT_1) : m_variant);
 	}
 	inline size_t size() const
 	{
@@ -127,29 +85,13 @@ public:
 	{
 		return reinterpret_cast<uint32_t*>(m_blob + 39);
 	}
-	inline uint32_t diff() const
-	{
-		return (uint32_t) m_diff;
-	}
 	inline uint64_t target() const
 	{
 		return m_target;
 	}
-	inline void setNicehash(bool nicehash)
+	inline uint64_t height() const
 	{
-		m_nicehash = nicehash;
-	}
-	inline void setInstanceId(const unsigned short instanceId)
-	{
-		m_instanceId = instanceId;
-	}
-	inline void setInstances(const unsigned short instances)
-	{
-		m_instances = instances;
-	}
-	inline void setThreadId(int threadId)
-	{
-		m_threadId = threadId;
+		return m_height;
 	}
 
 	static bool fromHex(const char* in, unsigned int len, unsigned char* out);
@@ -168,24 +110,15 @@ public:
 	bool operator!=(const Job & other) const;
 
 private:
-	bool m_nicehash;
-	unsigned short m_instanceId;
-	unsigned short m_instances;
-	std::string m_coin;
 	std::string m_blob_str;
 	std::string m_target_str;
-	int m_algo;
-	int m_poolId;
-	int m_threadId;
-	int m_variant;
-	int m_mode;
-	int m_height;
+	Variant m_variant;
 	size_t m_size;
 	uint64_t m_diff;
 	uint64_t m_target;
+	uint64_t m_height;
 	VAR_ALIGN(16,
-	          uint8_t m_blob[96]); // Max blob size is 84 (75 fixed + 9 variable), aligned to 96. https://github.com/xmrig/xmrig/issues/1 Thanks fireice-uk.
-	xmrig::Id m_id;
+	          uint8_t m_blob[96]); // Max blob size is 84 (75 fixed + 9 variable), aligned to 96.
 };
 
 #endif /* __JOB_H__ */

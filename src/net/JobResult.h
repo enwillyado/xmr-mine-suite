@@ -35,23 +35,10 @@
 class JobResult
 {
 public:
-	inline JobResult() : poolId(0), diff(0), nonce(0) {}
+	inline JobResult() : nonce(0) {}
 
-	inline JobResult(int poolId, const xmrig::Id & jobId, uint32_t nonce, const uint8_t* result, uint32_t diff) :
-		poolId(poolId),
-		diff(diff),
-		nonce(nonce),
-		jobId(jobId)
+	inline JobResult(const Job & job) : nonce(0)
 	{
-		memcpy(this->result, result, sizeof(this->result));
-	}
-
-
-	inline JobResult(const Job & job) : poolId(0), diff(0), nonce(0)
-	{
-		jobId  = job.id();
-		poolId = job.poolId();
-		diff   = job.diff();
 		nonce  = *job.nonce();
 		memset(this->result, 0, sizeof(this->result));
 	}
@@ -59,9 +46,8 @@ public:
 
 	inline JobResult & operator=(const Job & job)
 	{
-		jobId  = job.id();
-		poolId = job.poolId();
-		diff   = job.diff();
+		nonce  = *job.nonce();
+		memset(this->result, 0, sizeof(this->result));
 
 		return *this;
 	}
@@ -73,11 +59,8 @@ public:
 	}
 
 
-	int poolId;
-	uint32_t diff;
 	uint32_t nonce;
 	uint8_t result[32];
-	xmrig::Id jobId;
 };
 
 #endif /* __JOBRESULT_H__ */

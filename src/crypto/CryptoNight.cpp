@@ -22,195 +22,44 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "crypto/cryptonight.h"
 
-#include "crypto/CryptoNight.h"
-
-
-#if defined(XMRIG_ARM)
-#   include "crypto/CryptoNight_arm.h"
-#else
-#   include "crypto/CryptoNight_x86.h"
-#endif
-
-#include "crypto/CryptoNight_test.h"
 #include "net/Job.h"
 #include "net/JobResult.h"
-#include "xmrig.h"
 
+bool CryptoNight::hash(const Job & job, JobResult & result, cryptonight_ctx** ctx)
+{
+	switch(job.variant())
+	{
+	case VARIANT_0:
+		return hash_t<VARIANT_0>(job, result, ctx);
+	case VARIANT_1:
+		return hash_t<VARIANT_1>(job, result, ctx);
+	case VARIANT_2:
+		return hash_t<VARIANT_2>(job, result, ctx);
+	case VARIANT_4:
+		return hash_t<VARIANT_4>(job, result, ctx);
 
-void (*cryptonight_hash_ctx)(const uint8_t* input, size_t size, uint8_t* output, cryptonight_ctx* ctx,
-                             int variant) = nullptr;
-
-
-#define CRYPTONIGHT_HASH(NAME, ITERATIONS, MEM, MASK, SOFT_AES) \
-	switch (variant) { \
-	case xmrig::VARIANT_V1: \
-		return cryptonight_##NAME##_hash<ITERATIONS, MEM, MASK, SOFT_AES, xmrig::VARIANT_V1>(input, size, output, ctx); \
-		\
-	case xmrig::VARIANT_NONE: \
-		return cryptonight_##NAME##_hash<ITERATIONS, MEM, MASK, SOFT_AES, xmrig::VARIANT_NONE>(input, size, output, ctx); \
-		\
-	default: \
-		break; \
+	case VARIANT_AUTO:
+	default:
+		fprintf(stderr, "Invalid VARIANT!\n");
+		abort();
 	}
-
-
-static void cryptonight_av1_aesni(const uint8_t* input, size_t size, uint8_t* output,
-                                  struct cryptonight_ctx* ctx, int variant)
-{
-#   if !defined(XMRIG_ARMv7)
-	CRYPTONIGHT_HASH(single, MONERO_ITER, MONERO_MEMORY, MONERO_MASK, false)
-#   endif
 }
 
-
-static void cryptonight_av2_aesni_double(const uint8_t* input, size_t size, uint8_t* output,
-        cryptonight_ctx* ctx, int variant)
+template<Variant VARIANT>
+bool CryptoNight::hash_t(const Job & job, JobResult & result, cryptonight_ctx** ctx)
 {
-#   if !defined(XMRIG_ARMv7)
-	CRYPTONIGHT_HASH(double, MONERO_ITER, MONERO_MEMORY, MONERO_MASK, false)
-#   endif
-}
-
-
-static void cryptonight_av3_softaes(const uint8_t* input, size_t size, uint8_t* output, cryptonight_ctx* ctx,
-                                    int variant)
-{
-	CRYPTONIGHT_HASH(single, MONERO_ITER, MONERO_MEMORY, MONERO_MASK, true)
-}
-
-
-static void cryptonight_av4_softaes_double(const uint8_t* input, size_t size, uint8_t* output,
-        cryptonight_ctx* ctx, int variant)
-{
-	CRYPTONIGHT_HASH(double, MONERO_ITER, MONERO_MEMORY, MONERO_MASK, true)
-}
-
-
-#ifndef XMRIG_NO_AEON
-static void cryptonight_lite_av1_aesni(const uint8_t* input, size_t size, uint8_t* output,
-                                       cryptonight_ctx* ctx, int variant)
-{
-#   if !defined(XMRIG_ARMv7)
-	CRYPTONIGHT_HASH(single, AEON_ITER, AEON_MEMORY, AEON_MASK, false)
-#   endif
-}
-
-
-static void cryptonight_lite_av2_aesni_double(const uint8_t* input, size_t size, uint8_t* output,
-        cryptonight_ctx* ctx, int variant)
-{
-#   if !defined(XMRIG_ARMv7)
-	CRYPTONIGHT_HASH(double, AEON_ITER, AEON_MEMORY, AEON_MASK, false)
-#   endif
-}
-
-
-static void cryptonight_lite_av3_softaes(const uint8_t* input, size_t size, uint8_t* output,
-        cryptonight_ctx* ctx, int variant)
-{
-	CRYPTONIGHT_HASH(single, AEON_ITER, AEON_MEMORY, AEON_MASK, true)
-}
-
-
-static void cryptonight_lite_av4_softaes_double(const uint8_t* input, size_t size, uint8_t* output,
-        cryptonight_ctx* ctx, int variant)
-{
-	CRYPTONIGHT_HASH(double, AEON_ITER, AEON_MEMORY, AEON_MASK, true)
-}
-
-void (*cryptonight_variations[8])(const uint8_t* input, size_t size, uint8_t* output, cryptonight_ctx* ctx,
-                                  int variant) =
-{
-	cryptonight_av1_aesni,
-	cryptonight_av2_aesni_double,
-	cryptonight_av3_softaes,
-	cryptonight_av4_softaes_double,
-	cryptonight_lite_av1_aesni,
-	cryptonight_lite_av2_aesni_double,
-	cryptonight_lite_av3_softaes,
-	cryptonight_lite_av4_softaes_double
-};
-#else
-void (*cryptonight_variations[4])(const uint8_t* input, size_t size, uint8_t* output, cryptonight_ctx* ctx,
-                                  int variant) =
-{
-	cryptonight_av1_aesni,
-	cryptonight_av2_aesni_double,
-	cryptonight_av3_softaes,
-	cryptonight_av4_softaes_double
-};
+#ifndef NDEBUG
+		fprintf(stderr, "Hash with %d variant.\n", VARIANT);
 #endif
 
-
-bool CryptoNight::hash(const Job & job, JobResult & result, cryptonight_ctx* ctx)
-{
-	cryptonight_hash_ctx(job.blob(), job.size(), result.result, ctx, job.variant());
+	CryptoNight::cryptonight_hash_ctx<VARIANT>(result.result, job.blob(), job.size(), ctx, job.height());
 
 	return *reinterpret_cast<uint64_t*>(result.result + 24) < job.target();
 }
 
-
-bool CryptoNight::init(int algo, const bool doubleHash, int mode)
+bool CryptoNight::selfTest()
 {
-	if(mode < 1 || mode > 4)
-	{
-		return false;
-	}
-
-#   ifndef XMRIG_NO_AEON
-	const int index = algo == xmrig::ALGO_CRYPTONIGHT_LITE ? (mode + 3) : (mode - 1);
-#   else
-	const int index = mode - 1;
-#   endif
-
-	cryptonight_hash_ctx = cryptonight_variations[index];
-
-	return selfTest(algo, doubleHash);
-}
-
-
-void CryptoNight::hash(const uint8_t* input, size_t size, uint8_t* output, cryptonight_ctx* ctx, int variant)
-{
-	cryptonight_hash_ctx(input, size, output, ctx, variant);
-}
-
-
-bool CryptoNight::selfTest(int algo, const bool doubleHash)
-{
-	if(cryptonight_hash_ctx == nullptr)
-	{
-		return false;
-	}
-
-	uint8_t output[64];
-
-	struct cryptonight_ctx* ctx = static_cast<cryptonight_ctx*>(_mm_malloc(sizeof(cryptonight_ctx), 16));
-	ctx->memory = static_cast<uint8_t*>(_mm_malloc(MONERO_MEMORY * 2, 16));
-
-	cryptonight_hash_ctx(test_input, 76, output, ctx, 0);
-
-#   ifndef XMRIG_NO_AEON
-	bool rc = memcmp(output, algo == xmrig::ALGO_CRYPTONIGHT_LITE ? test_output_v0_lite : test_output_v0,
-	                 (doubleHash ? 64 : 32)) == 0;
-#   else
-	bool rc = memcmp(output, test_output_v0, (doubleHash ? 64 : 32)) == 0;
-#   endif
-
-	if(rc)
-	{
-		cryptonight_hash_ctx(test_input, 76, output, ctx, 1);
-
-#       ifndef XMRIG_NO_AEON
-		rc = memcmp(output, algo == xmrig::ALGO_CRYPTONIGHT_LITE ? test_output_v1_lite : test_output_v1,
-		            (doubleHash ? 64 : 32)) == 0;
-#       else
-		rc = memcmp(output, test_output_v1, (doubleHash ? 64 : 32)) == 0;
-#       endif
-	}
-
-	_mm_free(ctx->memory);
-	_mm_free(ctx);
-
-	return rc;
+	return cryptonight_test();
 }
