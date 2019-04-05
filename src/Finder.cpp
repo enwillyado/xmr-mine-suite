@@ -27,42 +27,9 @@
 
 #include <pthread.h>     /* pthread functions and data structures */
 
-class PrivateWorkers : public tcp_server
-{
-public:	
-	void getMessage(const int client_sock, const std::string & client_message)
-	{
-		std::cout << "-]]]]]]]]]]]]]]]]]]]]]]]" << std::endl;
-		std::cout << client_sock << " : " << client_message << std::endl;
-		std::cout << "------------------------" << std::endl;
-		
-		//Send the message back to client
-		const std::string http_response_mssage = "Receive";
-		const std::string response_mssage = 
-			"HTTP/1.1 200 OK" "\r\n"\
-			"Content-Length: " + toStr(http_response_mssage.size()) + "\r\n"\
-			"Content-Type: text/plain; charset=utf-18" "\r\n"\
-			"\r\n" + http_response_mssage + "\r\n";
-
-		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-		std::cout << client_sock << " : " << response_mssage << std::endl;
-		std::cout << "------------------------" << std::endl;
-		
-		sendMessage(client_sock, response_mssage);
-		
-		disconectClient(client_sock);
-	}
-	
-	void getDisconect(const int client_sock)
-	{
-		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-		std::cout << "Disconected : " << client_sock << std::endl;
-		std::cout << "------------------------" << std::endl;
-	}
-};
-
 class PrivateFinder : public tcp_client
 {	
+public:
 	static std::vector<std::string> Split(const std::string & s, char delim)
 	{
 		std::vector<std::string> elems;
@@ -75,7 +42,6 @@ class PrivateFinder : public tcp_client
 		return elems;
 	}
 
-public:
 	void receive()
 	{
 		const std::string & str = tcp_client::receive(1024);
@@ -130,6 +96,99 @@ public:
 		Workers::GetInstance().broadcast(job);
 		
 		receive();
+	}
+};
+
+class PrivateWorkers : public tcp_server
+{
+public:	
+	void getMessage(const int client_sock, const std::string & client_message)
+	{
+#ifdef NDEBUG
+		std::cout << "-]]]]]]]]]]]]]]]]]]]]]]]" << std::endl;
+		std::cout << client_sock << " : " << client_message << std::endl;
+		std::cout << "------------------------" << std::endl;		
+#endif
+		std::string str = client_message;
+		for(size_t iii = 0; iii < str.size(); ++iii)
+		{
+			if(str[iii] == '=')
+			{
+				str[iii] = '&';
+			}
+		}
+		std::vector<std::string> x = Split(str, '&');
+		
+		//Send the message back to client
+		std::string http_response_message = "Bad message";
+		for(size_t i = 0; i < x.size(); ++i)
+		{
+			const std::string & xi = x[i];
+			if(xi == "q")
+			{
+				const std::string & xi1 = x[i + 1];
+				if(xi1 == "start")
+				{
+					const std::string & xi2 = x[i + 2];
+					if(xi2 == "port")
+					{
+						const std::string & port = x[i + 3];
+						
+						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+						std::cout << client_sock << " : port : " << port << std::endl;
+						std::cout << "------------------------" << std::endl;
+						
+						http_response_message = "Receive start, wellcome!";						
+					}
+				}
+				else if(xi1 == "end")
+				{
+					std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+					std::cout << client_sock << " : end" << std::endl;
+					std::cout << "------------------------" << std::endl;
+						
+					http_response_message = "Receive end, bye!";
+				}
+				else if(xi1 == "nonce")
+				{
+					const std::string & xi2 = x[i + 2];
+					if(xi2 == "nonce")
+					{
+						const std::string & nonce = x[i + 3];
+						
+						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+						std::cout << client_sock << " : nonce : " << nonce << std::endl;
+						std::cout << "------------------------" << std::endl;
+						
+						http_response_message = "Receive nonce, thnks!";
+					}
+				}
+			}
+		}
+		
+		const std::string response_message = 
+			"HTTP/1.1 200 OK" "\r\n"\
+			"Content-Length: " + toStr(http_response_message.size() + 2) + "\r\n"\
+			"Content-Type: text/plain; charset=utf-18" "\r\n"\
+			"\r\n" + http_response_message + "\r\n";
+
+#ifdef NDEBUG
+		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+		std::cout << client_sock << " : " << response_message << std::endl;
+		std::cout << "------------------------" << std::endl;
+#endif
+		
+		sendMessage(client_sock, response_message);
+		
+		disconectClient(client_sock);
+	}
+	
+	void getDisconect(const int client_sock)
+	{
+#ifdef NDEBUG
+		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+		std::cout << "Disconected : " << client_sock << std::endl;
+		std::cout << "------------------------" << std::endl;
 	}
 };
 
