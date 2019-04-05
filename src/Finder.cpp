@@ -2,11 +2,13 @@
  * Only find a job from provider.
  */
 #include "Finder.h"
+#include "version.h"
 
 #include <iostream>
 #include <iomanip>
 
 #include "3rdparty/w_tcp/tcpclient.h"
+#include "3rdparty/w_base/toStr.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -22,10 +24,51 @@
 #include <sstream>
 #include <algorithm>
 #include <vector>
+#include <map>
 #include <iterator>
+
+class Workers
+{
+	typedef std::map<std::string, int> WorkersMap;
+	
+	WorkersMap workersMap;
+	
+public:	
+	void broadcast(const std::string & job)
+	{
+		std::cout << "------------------------" << std::endl;
+		std::cout << job << std::endl;
+		
+		size_t ini = 0;
+		if(workersMap.size() > 0)
+		{
+			const size_t steep = DEFAULT_END / workersMap.size();
+			
+			for (WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
+			{
+				const std::string seek = toStr(ini) + " " + toStr(ini+steep);
+				std::cout << it->first << " : " << seek << std::endl;
+				
+				const std::string packet = job + " " + seek;
+				
+				if(system((std::string("./udp_send.sh '" + it->first + "' '") + packet + "'").c_str()))
+				{
+					std::cerr << "Fail to send job to worker: " << it->first << std::endl;
+				}
+				
+				ini += steep + 1;
+			}
+		}
+		
+		std::cout << "------------------------" << std::endl;
+	}
+};
+
 
 class PrivateFinder : public tcp_client
 {
+	Workers workers;
+	
 	static std::vector<std::string> Split(const std::string & s, char delim)
 	{
 		std::vector<std::string> elems;
@@ -44,7 +87,7 @@ public:
 		const std::string & str = tcp_client::receive(1024);
 		std::vector<std::string> x = Split(str, '"');
 
-		std::cout << "------------------------" << std::endl;
+		std::cout << "-<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 		std::cout << str << std::endl;
 		std::cout << "------------------------" << std::endl;
 
@@ -52,6 +95,7 @@ public:
 		std::string job_id;
 		std::string blob;
 		std::string target;
+		std::string height;
 		for(size_t i = 0; i < x.size(); ++i)
 		{
 			const std::string xi = x[i];
@@ -71,89 +115,27 @@ public:
 			{
 				id = x[i + 2];
 			}
+			else if(xi == "height")
+			{
+				for(size_t iii = 0; iii < x[i + 1].size(); ++iii)
+				{
+					if(x[i + 1][iii] < '0' || x[i + 1][iii] > '9')
+					{
+						x[i + 1][iii] = ' ';
+					}
+				}
+				height = x[i + 1];
+			}
 			else
 			{
 
 			}
 		}
 
-		exec("miner-x64x.exe " + blob + " " + target, blob, target, job_id, id);
-	}
-
-	int exec(const std::string & cmd, const std::string & blob, const std::string & target,
-	         const std::string & job_id, const std::string & id)
-	{
-		char buffer[12];
-		std::string result = "";
-		FILE* pipe = popen(cmd.c_str(), "r");
-		if(!pipe)
-		{
-			return 1;
-		}
-		try
-		{
-			while(!feof(pipe))
-			{
-				if(fgets(buffer, sizeof(buffer), pipe) != NULL)
-				{
-					const std::string str = buffer;
-					const std::size_t posEnd = str.find_first_of(';');           // position of "end of line" in str
-					if(std::string::npos != posEnd)
-					{
-						const std::string comando = str.substr(0, posEnd);       // get from "live" to the end
-						const std::size_t pos = comando.find_first_of(':');      // position of "separator" in str
-						if(std::string::npos != pos)
-						{
-							const std::string action = comando.substr(0, pos);   // get from "live" to the end
-							const std::string value = comando.substr(pos + 1);   // get from "live" to the end
-
-							if(action == "S")
-							{
-								std::cout << value << std::endl;
-							}
-							else if(action == "M")
-							{
-								//send some data
-								send_data("{\"id\":2,\"jsonrpc\":\"2.0\",\"method\":\"submit\",\"params\":{\"id\":\"" + id +
-								          " \",\"job_id\":\"" + job_id + "\",\"nonce\":\"" + value + "\",\"result\":\"" + result + "\"}}\n");
-
-								// receive response
-								receive();
-							}
-							else if(action == "E")
-							{
-
-							}
-							else if(action == "X")
-							{
-
-							}
-							else
-							{
-								std::cout << buffer;
-							}
-						}
-						else
-						{
-							std::cout << buffer;
-						}
-					}
-					else
-					{
-						std::cout << buffer;
-					}
-
-					result += buffer;
-				}
-			}
-		}
-		catch(...)
-		{
-			pclose(pipe);
-			return 2;
-		}
-		pclose(pipe);
-		return 0;
+		const std::string job = blob + " " + target + " " + height + " ";
+		workers.broadcast(job);
+		
+		receive();
 	}
 };
 
@@ -167,10 +149,15 @@ int Finder::Exec(const std::string & host, const int port, const std::string & u
 
 	//connect to host
 	c.conn(host, port);
-
+	
+	const std::string & str = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
+							"\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}";
+	std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+	std::cout << str << std::endl;
+	std::cout << "------------------------" << std::endl;
+	
 	//send some data
-	c.send_data("{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
-	            "\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}\n");
+	c.send_data(str + "\n");
 
 	//receive and echo reply
 	c.receive();

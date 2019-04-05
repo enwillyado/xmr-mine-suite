@@ -11,12 +11,20 @@ cd obj
 gcc -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_C   -c -I../src/ ../src/crypto/c_blake256.c ../src/crypto/c_groestl.c ../src/crypto/c_jh.c ../src/crypto/c_keccak.c ../src/crypto/c_skein.c
 g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/crypto/cryptonight_v.cpp ../src/crypto/cryptonight.cpp ../src/net/Job.cpp ../src/miner.cpp
 g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_C   -c -I../src/ ../src/crypto/cryptonightR_template.S
-g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/minerApp.cpp ../src/minerWorker.cpp
 ar rcsvouU miner.a  cryptonight.o cryptonight_v.o cryptonightR_template.o c_blake256.o c_groestl.o c_jh.o c_keccak.o c_skein.o Job.o miner.o
+
+g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/3rdparty/w_tcp/tcpclient.cpp ../src/3rdparty/w_sistema/w_sistema_thread_comun.cpp ../src/3rdparty/w_sistema/w_sistema_thread_unix.cpp  ../src/3rdparty/w_sistema/w_sistema_thread_win.cpp 
+ar rcsvouU 3rdparty.a  tcpclient.o w_sistema_thread_comun.o w_sistema_thread_unix.o w_sistema_thread_win.o
+
+g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/minerApp.cpp ../src/minerWorker.cpp
+g++ -v -Wall $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/Finder.cpp ../src/finderApp.cpp
 
 g++ $FLAGS_LINKER minerApp.o miner.a -o ../miner.exe
 g++ $FLAGS_LINKER minerWorker.o miner.a -o ../miner_worker.exe
+g++ $FLAGS_LINKER Finder.o finderApp.o 3rdparty.a -o ../finder_app.exe
 
 cd ..
 
 strip -s miner.exe
+strip -s miner_worker.exe
+strip -s finder_app.exe
