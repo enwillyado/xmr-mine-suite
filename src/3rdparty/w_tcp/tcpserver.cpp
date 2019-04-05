@@ -51,7 +51,7 @@ bool tcp_server::create(const int port)
 		return false;
 	}
 	
-#ifdef NDEBUG
+#ifndef NDEBUG
 	puts("Socket created");
 #endif
 
@@ -67,7 +67,7 @@ bool tcp_server::create(const int port)
 		perror("bind failed. Error");
 		return false;
 	}
-#ifdef NDEBUG
+#ifndef NDEBUG
 	puts("bind done");
 #endif
 
@@ -75,7 +75,7 @@ bool tcp_server::create(const int port)
 	listen(socket_desc , 3);
 	
 	//Accept and incoming connection
-#ifdef NDEBUG
+#ifndef NDEBUG
 	puts("Waiting for incoming connections...");
 #endif
 	
@@ -99,7 +99,7 @@ void tcp_server::start()
 			perror("accept failed");
 			return;
 		}
-#ifdef NDEBUG
+#ifndef NDEBUG
 		puts("Connection accepted");
 #endif
 		
@@ -112,7 +112,7 @@ void tcp_server::start()
 		}
 		else if(read_size == 0)
 		{
-#ifdef NDEBUG
+#ifndef NDEBUG
 			puts("Client disconnected");
 #endif
 			

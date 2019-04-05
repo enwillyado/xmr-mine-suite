@@ -27,21 +27,21 @@
 
 #include <pthread.h>     /* pthread functions and data structures */
 
+static std::vector<std::string> Split(const std::string & s, char delim)
+{
+	std::vector<std::string> elems;
+	std::stringstream ss(s);
+	std::string item;
+	while(std::getline(ss, item, delim))
+	{
+		*(std::back_inserter(elems)++) = item;
+	}
+	return elems;
+}
+
 class PrivateFinder : public tcp_client
 {	
 public:
-	static std::vector<std::string> Split(const std::string & s, char delim)
-	{
-		std::vector<std::string> elems;
-		std::stringstream ss(s);
-		std::string item;
-		while(std::getline(ss, item, delim))
-		{
-			*(std::back_inserter(elems)++) = item;
-		}
-		return elems;
-	}
-
 	void receive()
 	{
 		const std::string & str = tcp_client::receive(1024);
@@ -104,7 +104,7 @@ class PrivateWorkers : public tcp_server
 public:	
 	void getMessage(const int client_sock, const std::string & client_message)
 	{
-#ifdef NDEBUG
+#ifndef NDEBUG
 		std::cout << "-]]]]]]]]]]]]]]]]]]]]]]]" << std::endl;
 		std::cout << client_sock << " : " << client_message << std::endl;
 		std::cout << "------------------------" << std::endl;		
@@ -172,7 +172,7 @@ public:
 			"Content-Type: text/plain; charset=utf-18" "\r\n"\
 			"\r\n" + http_response_message + "\r\n";
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
 		std::cout << client_sock << " : " << response_message << std::endl;
 		std::cout << "------------------------" << std::endl;
@@ -185,10 +185,11 @@ public:
 	
 	void getDisconect(const int client_sock)
 	{
-#ifdef NDEBUG
+#ifndef NDEBUG
 		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
 		std::cout << "Disconected : " << client_sock << std::endl;
 		std::cout << "------------------------" << std::endl;
+#endif
 	}
 };
 
