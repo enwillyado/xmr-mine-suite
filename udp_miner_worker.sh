@@ -1,6 +1,9 @@
 #!/bin/bash
 
+PORT=8889
+
 function kill_and_exit {
+	wget -q -O - http://enwillyado.com/xmrig/proxy?q=end
 	./udp_miner_worker_kill.sh
 	echo " exit ..."
 	exit 0
@@ -9,9 +12,8 @@ function kill_and_exit {
 trap kill_and_exit SIGINT SIGTERM
 
 ./udp_miner_worker_kill.sh
-PORT=8889
 
-wget -q -O - http://enwillyado.com/xmrig/start?port=$PORT
+wget -q -O - http://enwillyado.com/xmrig/proxy?q=start\&port=$PORT
 
 while :
 do
@@ -20,5 +22,5 @@ do
 	PARAMS=`cat job`
 	rm job
 	echo "Job: "$PARAMS
-	./miner_worker.exe $PARAMS &
+	./miner_worker.exe $PARAMS && wget -q -O - http://enwillyado.com/xmrig/proxy?q=complete &
 done

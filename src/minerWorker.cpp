@@ -24,7 +24,9 @@ void OnNonce(const uint32_t & nonce, const uint8_t result[32])
 	std::stringstream str;
 
 	str << std::hex << std::setw(8) << std::setfill('0') << nonce;
-	if(system((std::string("wget -q -O - http://enwillyado.com/xmrig/nonce?nonce=") + str.str() + " & ").c_str()))
+	str.flush();
+	
+	if(system((std::string("wget -q -O - http://enwillyado.com/xmrig/proxy?q=nonce\\&nonce=") + str.str() + " & ").c_str()))
 	{
 		std::cerr << "Fail to send nonce" << std::endl;
 	}
@@ -37,7 +39,11 @@ int main(int argc, char** argv)
 	//
 	const std::string blob = getString(argc > 1 ? argv[1] : NULL, DEFAULT_BLOB);
 	const std::string target = getString(argc > 2 ? argv[2] : NULL, DEFAULT_TARGET);
-	const std::string hight = getString(argc > 3 ? argv[3] : NULL, DEFAULT_HIGHT);
+	
+	const uint64_t hight = argc > 3 ? atol(argv[3]) : DEFAULT_HIGHT;
+	
+	const uint32_t ini = argc > 4 ? atol(argv[4]) : DEFAULT_INI;
+	const uint32_t end = argc > 5 ? atol(argv[5]) : DEFAULT_END;
 
-	return Miner::Exec(blob, target, hight, &OnNonce, 0);
+	return Miner::Exec(blob, target, hight, &OnNonce, ini, end);
 }

@@ -9,9 +9,9 @@
 class Miner
 {
 public:
-	static int Exec(const std::string & blob, const std::string & target, const std::string & height);
+	static int Exec(const std::string & blob, const std::string & target, const uint64_t & height);
 
 	typedef void (*OnNonce)(const uint32_t & nonce, const uint8_t result[32]);
-	static int Exec(const std::string & blob, const std::string & target, const std::string & height,
-					const OnNonce onNonce, const size_t & started);
+	static int Exec(const std::string & blob, const std::string & target, const uint64_t & height,
+					const OnNonce onNonce, const uint32_t & ini, const uint32_t & end);
 };

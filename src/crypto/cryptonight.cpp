@@ -51,7 +51,7 @@ template<Variant VARIANT>
 bool CryptoNight::hash_t(const Job & job, JobResult & result, cryptonight_ctx** ctx)
 {
 #ifndef NDEBUG
-		fprintf(stderr, "Hash with %d variant.\n", VARIANT);
+	fprintf(stderr, "Hash with %d variant.\n", VARIANT);
 #endif
 
 	CryptoNight::cryptonight_hash_ctx<VARIANT>(result.result, job.blob(), job.size(), ctx, job.height());

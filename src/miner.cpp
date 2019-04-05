@@ -2,6 +2,7 @@
  * Only mine a job [$1], iterate nonce target [$2] from start [$3=0] to end [$4=-1].
  */
 #include "Miner.h"
+#include "version.h"
 
 #include "net/Job.h"
 #include "net/JobResult.h"
@@ -11,13 +12,13 @@
 #include <iostream>
 #include <iomanip>
 
-int Miner::Exec(const std::string & blob, const std::string & target, const std::string & height)
+int Miner::Exec(const std::string & blob, const std::string & target, const uint64_t & height)
 {
-	return Miner::Exec(blob, target, height, NULL, 0);
+	return Miner::Exec(blob, target, height, NULL, DEFAULT_INI, DEFAULT_END);
 }
 
-int Miner::Exec(const std::string & blob, const std::string & target, const std::string & height,
-				const OnNonce onNonce, const size_t & actual)
+int Miner::Exec(const std::string & blob, const std::string & target, const uint64_t & height,
+				const OnNonce onNonce, const uint32_t & ini, const uint32_t & end)
 {
 	// Create and set job
 	//
@@ -35,7 +36,7 @@ int Miner::Exec(const std::string & blob, const std::string & target, const std:
 		return 4;
 	}
 
-	if(!job.setHeight(atoi(height.c_str())))
+	if(!job.setHeight(height))
 	{
 		std::cerr << "Height fail" << std::endl;
 		return 5;
@@ -48,12 +49,13 @@ int Miner::Exec(const std::string & blob, const std::string & target, const std:
 	//
 	JobResult result(job);
 
-	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ":" << (int)job.variant() << ";" << std::endl;
-
 	// Start hashing
 	//
-	size_t started = actual;
-	while(started == actual)
+	uint32_t & actual = *job.nonce();
+	actual = ini;
+
+	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ":" << (int)job.variant() << ";" << std::endl;
+	while(actual <= end)
 	{
 		if(CryptoNight::hash(job, result, ctx))
 		{
@@ -67,7 +69,9 @@ int Miner::Exec(const std::string & blob, const std::string & target, const std:
 			}
 		}
 
+#ifdef NDEBUG
 		if(0 == (++(*job.nonce()) % 0x100))
+#endif
 		{
 			std::cout << "X:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;
 		}
