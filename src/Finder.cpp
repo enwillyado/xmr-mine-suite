@@ -2,12 +2,15 @@
  * Only find a job from provider.
  */
 #include "Finder.h"
+#include "Workers.h"
 #include "version.h"
 
 #include <iostream>
 #include <iomanip>
 
+#include "3rdparty/w_tcp/tcpserver.h"
 #include "3rdparty/w_tcp/tcpclient.h"
+
 #include "3rdparty/w_base/toStr.hpp"
 
 #include <iostream>
@@ -16,59 +19,50 @@
 #include <string>
 #include <stdlib.h>
 
-#ifdef _INC_STDIO
-#define popen _popen
-#define pclose _pclose
-#endif
-
 #include <sstream>
 #include <algorithm>
 #include <vector>
 #include <map>
 #include <iterator>
 
-class Workers
+#include <pthread.h>     /* pthread functions and data structures */
+
+class PrivateWorkers : public tcp_server
 {
-	typedef std::map<std::string, int> WorkersMap;
-	
-	WorkersMap workersMap;
-	
 public:	
-	void broadcast(const std::string & job)
+	void getMessage(const int client_sock, const std::string & client_message)
 	{
+		std::cout << "-]]]]]]]]]]]]]]]]]]]]]]]" << std::endl;
+		std::cout << client_sock << " : " << client_message << std::endl;
 		std::cout << "------------------------" << std::endl;
-		std::cout << job << std::endl;
 		
-		size_t ini = 0;
-		if(workersMap.size() > 0)
-		{
-			const size_t steep = DEFAULT_END / workersMap.size();
-			
-			for (WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
-			{
-				const std::string seek = toStr(ini) + " " + toStr(ini+steep);
-				std::cout << it->first << " : " << seek << std::endl;
-				
-				const std::string packet = job + " " + seek;
-				
-				if(system((std::string("./udp_send.sh '" + it->first + "' '") + packet + "'").c_str()))
-				{
-					std::cerr << "Fail to send job to worker: " << it->first << std::endl;
-				}
-				
-				ini += steep + 1;
-			}
-		}
+		//Send the message back to client
+		const std::string http_response_mssage = "Receive";
+		const std::string response_mssage = 
+			"HTTP/1.1 200 OK" "\r\n"\
+			"Content-Length: " + toStr(http_response_mssage.size()) + "\r\n"\
+			"Content-Type: text/plain; charset=utf-18" "\r\n"\
+			"\r\n" + http_response_mssage + "\r\n";
+
+		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+		std::cout << client_sock << " : " << response_mssage << std::endl;
+		std::cout << "------------------------" << std::endl;
 		
+		sendMessage(client_sock, response_mssage);
+		
+		disconectClient(client_sock);
+	}
+	
+	void getDisconect(const int client_sock)
+	{
+		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+		std::cout << "Disconected : " << client_sock << std::endl;
 		std::cout << "------------------------" << std::endl;
 	}
 };
 
-
 class PrivateFinder : public tcp_client
-{
-	Workers workers;
-	
+{	
 	static std::vector<std::string> Split(const std::string & s, char delim)
 	{
 		std::vector<std::string> elems;
@@ -133,16 +127,44 @@ public:
 		}
 
 		const std::string job = blob + " " + target + " " + height + " ";
-		workers.broadcast(job);
+		Workers::GetInstance().broadcast(job);
 		
 		receive();
 	}
 };
 
+void* createServer(void* data)
+{
+	PrivateWorkers* server = static_cast<PrivateWorkers*>(data);
+	if(server != NULL)
+	{
+		server->start();
+	}
+	return data;
+}
 
 int Finder::Exec(const std::string & host, const int port, const std::string & user, const std::string & pass,
                  const std::string & agent)
 {
+	// create workers
+	Workers::GetInstance();
+	
+	// create server
+	PrivateWorkers server;
+	if(false == server.create(DEFAULT_SERVER_PORT))
+	{
+		std::cerr << "Fail to create server" << std::endl;
+		return -1;
+	}
+	
+    pthread_t server_p_thread;
+    int server_thr_id = pthread_create(&server_p_thread, NULL, createServer, (void*)&server);
+	if(server_thr_id < 0)
+	{
+		std::cerr << "Fail to start server" << std::endl;
+		return -1;
+	}
+	
 	// Create client
 	//
 	PrivateFinder c;

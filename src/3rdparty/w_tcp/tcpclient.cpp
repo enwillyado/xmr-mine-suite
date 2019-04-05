@@ -45,6 +45,10 @@ int create()
 tcp_client::tcp_client()
 {
 	static const int c = create();
+	if(c != 0)
+	{
+		return;
+	}
 	sock = -1;
 	port = 0;
 	address = "";
@@ -68,7 +72,7 @@ bool tcp_client::conn(const std::string & address, const int port)
 	}
 
 	//setup address structure
-	if(inet_addr(address.c_str()) == -1)
+	if(inet_addr(address.c_str()) == INADDR_NONE)
 	{
 		struct hostent* he;
 		struct in_addr** addr_list;
