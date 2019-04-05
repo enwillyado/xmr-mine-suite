@@ -34,7 +34,7 @@ void Workers::broadcast(const std::string & job)
 			
 			const std::string packet = job + " " + seek;
 			
-			if(system((std::string("./udp_send.sh '" + it->first + "' '") + packet + "'").c_str()))
+			if(system((std::string("./udp_send.sh '" + it->first + "/" + it->second.port + "' '") + packet + "'").c_str()))
 			{
 				std::cerr << "Fail to send job to worker: " << it->first << std::endl;
 			}
@@ -46,11 +46,15 @@ void Workers::broadcast(const std::string & job)
 	std::cout << "------------------------" << std::endl;
 }
 
-void  Workers::add(const Worker & worker)
+void  Workers::add(const Worker & worker, const Port & port)
 {
-	
+	workersMap[worker] = WorkerData(port);
+}
+void Workers::complete(const Worker & worker)
+{
+	workersMap[worker].size++;
 }
 void Workers::remove(const Worker & worker)
 {
-	
+	workersMap.erase(worker);
 }

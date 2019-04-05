@@ -10,8 +10,7 @@
 #include <arpa/inet.h>	//inet_addr
 #include <unistd.h>		//write
 
-
-void tcp_server::getMessage(const int client_sock, const std::string & client_message)
+void tcp_server::getMessage(const int client_sock, const std::string & client_sock_ip, const std::string & client_message)
 {
 	sendMessage(client_sock, client_message);
 }
@@ -26,7 +25,7 @@ void tcp_server::sendMessage(const int client_sock, const std::string & response
 	}
 }
 
-void tcp_server::getDisconect(const int client_sock)
+void tcp_server::getDisconect(const int client_sock, const std::string & client_sock_ip)
 {
 }
 
@@ -82,6 +81,14 @@ bool tcp_server::create(const int port)
 	return true;
 }
 
+// get sockaddr, IPv4 or IPv6:
+void inline *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET)
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
 void tcp_server::start()
 {
 	int client_sock , c , read_size;
@@ -102,13 +109,16 @@ void tcp_server::start()
 #ifndef NDEBUG
 		puts("Connection accepted");
 #endif
-		
+
+		char client_sock_ip[INET6_ADDRSTRLEN];
+		inet_ntop(AF_INET, get_in_addr((struct sockaddr *)&client), client_sock_ip, sizeof(client_sock_ip));
+
 		//Receive a message from client
 		read_size = recv(client_sock , client_message, 2048, 0);
 
 		if(read_size > 0 )
 		{
-			getMessage(client_sock, client_message);
+			getMessage(client_sock, client_sock_ip, client_message);
 		}
 		else if(read_size == 0)
 		{
@@ -116,7 +126,7 @@ void tcp_server::start()
 			puts("Client disconnected");
 #endif
 			
-			getDisconect(client_sock);
+			getDisconect(client_sock, client_sock_ip);
 		}
 		else if(read_size == -1)
 		{

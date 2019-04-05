@@ -102,12 +102,12 @@ public:
 class PrivateWorkers : public tcp_server
 {
 public:	
-	void getMessage(const int client_sock, const std::string & client_message)
+	void getMessage(const int client_sock, const std::string & client_sock_ip, const std::string & client_message)
 	{
 #ifndef NDEBUG
 		std::cout << "-]]]]]]]]]]]]]]]]]]]]]]]" << std::endl;
-		std::cout << client_sock << " : " << client_message << std::endl;
-		std::cout << "------------------------" << std::endl;		
+		std::cout << client_sock << " @ " << client_sock_ip << " : " << client_message << std::endl;
+		std::cout << "------------------------" << std::endl;
 #endif
 		std::string str = client_message;
 		for(size_t iii = 0; iii < str.size(); ++iii)
@@ -134,20 +134,37 @@ public:
 					{
 						const std::string & port = x[i + 3];
 						
+#ifndef NDEBUG
 						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " : port : " << port << std::endl;
+						std::cout << client_sock << " @ " << client_sock_ip << " : port : " << port << std::endl;
 						std::cout << "------------------------" << std::endl;
+#endif
+						Workers::GetInstance().add(client_sock_ip, port);
 						
-						http_response_message = "Receive start, wellcome!";						
+						http_response_message = "Receive start, welcome!";
 					}
 				}
 				else if(xi1 == "end")
 				{
+#ifndef NDEBUG
 					std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-					std::cout << client_sock << " : end" << std::endl;
+					std::cout << client_sock << " @ " << client_sock_ip << " : end" << std::endl;
 					std::cout << "------------------------" << std::endl;
+#endif
+					Workers::GetInstance().remove(client_sock_ip);
 						
 					http_response_message = "Receive end, bye!";
+				}
+				else if(xi1 == "complete")
+				{
+#ifndef NDEBUG
+					std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+					std::cout << client_sock << " @ " << client_sock_ip << " : complete" << std::endl;
+					std::cout << "------------------------" << std::endl;
+#endif
+					Workers::GetInstance().complete(client_sock_ip);
+						
+					http_response_message = "Receive complete, great!";
 				}
 				else if(xi1 == "nonce")
 				{
@@ -156,9 +173,11 @@ public:
 					{
 						const std::string & nonce = x[i + 3];
 						
+//#ifndef NDEBUG
 						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " : nonce : " << nonce << std::endl;
+						std::cout << client_sock << " @ " << client_sock_ip << " : nonce : " << nonce << std::endl;
 						std::cout << "------------------------" << std::endl;
+//#endif
 						
 						http_response_message = "Receive nonce, thnks!";
 					}
@@ -174,7 +193,7 @@ public:
 
 #ifndef NDEBUG
 		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-		std::cout << client_sock << " : " << response_message << std::endl;
+		std::cout << client_sock << " @ " << client_sock_ip << " : " << response_message << std::endl;
 		std::cout << "------------------------" << std::endl;
 #endif
 		
@@ -183,11 +202,11 @@ public:
 		disconectClient(client_sock);
 	}
 	
-	void getDisconect(const int client_sock)
+	void getDisconect(const int client_sock, const std::string & client_sock_ip)
 	{
 #ifndef NDEBUG
 		std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-		std::cout << "Disconected : " << client_sock << std::endl;
+		std::cout << "Disconected : " << client_sock << " @ " << client_sock_ip << std::endl;
 		std::cout << "------------------------" << std::endl;
 #endif
 	}

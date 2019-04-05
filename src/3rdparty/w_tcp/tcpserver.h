@@ -16,8 +16,8 @@ public:
 	bool create(const int port);
 	void start();
 	
-	virtual void getMessage(const int client_sock, const std::string & client_message);
-	virtual void getDisconect(const int client_sock);
+	virtual void getMessage(const int client_sock, const std::string & client_sock_ip, const std::string & client_message);
+	virtual void getDisconect(const int client_sock, const std::string & client_sock_ip);
 	
 	virtual void sendMessage(const int client_sock, const std::string & message_response);
 	virtual void disconectClient(const int client_sock);
