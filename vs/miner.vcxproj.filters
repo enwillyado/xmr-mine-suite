@@ -19,9 +19,6 @@
     <Filter Include="Archivos de encabezado\crypto">
       <UniqueIdentifier>{89d4683f-f5f4-4f23-a1da-c59d5ed9a30c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de encabezado\interfaces">
-      <UniqueIdentifier>{f4b9e412-a76d-4b33-85b4-82f73b88dd4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\net">
       <UniqueIdentifier>{c230f074-3bff-43bf-879c-0bf5f1bd5892}</UniqueIdentifier>
     </Filter>
@@ -128,9 +125,6 @@
     </ClInclude>
     <ClInclude Include="..\src\net\JobResult.h">
       <Filter>Archivos de encabezado\net</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\interfaces\interface.h">
-      <Filter>Archivos de encabezado\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="..\src\net\Id.h">
       <Filter>Archivos de encabezado\net</Filter>

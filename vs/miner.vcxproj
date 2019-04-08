@@ -63,7 +63,6 @@
     <ClInclude Include="..\src\crypto\skein_port.h" />
     <ClInclude Include="..\src\crypto\soft_aes.h" />
     <ClInclude Include="..\src\crypto\SSE2NEON.h" />
-    <ClInclude Include="..\src\interfaces\interface.h" />
     <ClInclude Include="..\src\Mem.h" />
     <ClInclude Include="..\src\Miner.h" />
     <ClInclude Include="..\src\net\Id.h" />
