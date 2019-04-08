@@ -91,9 +91,22 @@ public:
 		return c;
 	}
 	
+	void conn(const std::string & address, const int port)
+	{
+		serverhost = address;
+		serverport = toStr(port);
+		
+		//send some data
+		tcp_client::conn(address, port);
+	}
+	
 	void login(const std::string & user, const std::string & pass, const std::string & agent)
 	{
-		const std::string & str = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
+		serveruser = user;
+		serverpass = pass;
+		serveragent = agent;
+		message_id = 0;
+		const std::string & str = "{\"id\":" + toStr(++message_id) + ",\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
 								"\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}";
 #ifndef NDEBUG
 		std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
@@ -180,14 +193,12 @@ public:
 	}
 	
 	void sendNonce(const std::string & nonce, const std::string & result)
-	{
-		static int id = 1;
-		
+	{		
 		const std::string & str = "{\"method\":\"submit\","
 										"\"params\":{\"id\":\"" + session_id +
 											"\",\"job_id\":\"" + job_id +
 											"\",\"nonce\":\"" + nonce + 
-											"\",\"result\":\"" + result + "\"}, \"id\":" + toStr(++id) + "}";
+											"\",\"result\":\"" + result + "\"}, \"id\":" + toStr(++message_id) + "}";
 #ifndef NDEBUG
 		std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 		std::cout << str << std::endl;
@@ -201,12 +212,41 @@ public:
 		return blob + " " + target + " " + height;
 	}
 	
+	
+	void cout_stats() const
+	{
+		std::cout << "[Host/Port] o=" << serverhost << ":" << serverport << std::endl;
+		std::cout << "            u=" << serveruser << std::endl;
+#ifndef NDEBUG
+		std::cout << "            p=" << serverpass << std::endl;;
+		std::cout << "            a=" << serveragent << std::endl;
+#endif
+		std::cout << std::endl;
+		
+		std::cout << "            session=" << session_id << std::endl;
+		std::cout << "            job=" << job_id << std::endl;
+		std::cout << "            height=" << height << std::endl;
+#ifndef NDEBUG
+		std::cout << "            target=" << target << std::endl;
+		std::cout << "            blob=" << blob << std::endl;
+#endif
+		std::cout << "            id=" << message_id << std::endl;
+	}
+	
 private:
 	std::string session_id;
 	std::string job_id;
 	std::string blob;
 	std::string target;
 	std::string height;
+	
+	std::string serverhost;
+	std::string serverport;
+	std::string serveruser;
+	std::string serverpass;
+	std::string serveragent;
+	
+	size_t message_id;
 };
 
 class PrivateWorkers : public tcp_server
@@ -468,13 +508,24 @@ int Finder::Exec(const int workers_tcp_port,
 			case 'h':
 					std::cout << "- 'q': quit server." << std::endl;
 					std::cout << "- 'h': get this help." << std::endl;
+					std::cout << "- 'p': show jobs clientes (normally, there are pools or proxies)." << std::endl;
 					std::cout << "- 'n': show number of registred workers." << std::endl;
 					std::cout << "- 'l': list all registred workers." << std::endl;
 				break;
 				
+			case 'p':
+			{
+				std::cout << "=== Jobs clients: ===" << std::endl;
+				PrivateFinder::GetInstance().cout_stats();
+				
+#ifndef NDEBUG
+				PrivateFinder::GetDonateInstance().cout_stats();
+#endif
+			}
+				break;
+				
 			case 'n':
 			{
-				size_t id = 0;
 				const Workers::WorkersMap & workersMap = Workers::GetInstance().get();
 				std::cout << "=== There are (" << workersMap.size() << ") workers registred ===" << std::endl;
 			}
