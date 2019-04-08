@@ -81,18 +81,11 @@ bool tcp_server::create(const int port)
 	return true;
 }
 
-// get sockaddr, IPv4 or IPv6:
-void inline *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET)
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
-
 void tcp_server::start()
 {
 	int client_sock , c , read_size;
 	struct sockaddr_in client;
+	struct sockaddr* clientadd = (struct sockaddr* )(&client);
 	char client_message[2048];
 	
 	c = sizeof(struct sockaddr_in);
@@ -100,7 +93,7 @@ void tcp_server::start()
 	//accept connection from an incoming client
 	while(true)
 	{
-		client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
+		client_sock = accept(socket_desc, clientadd, (socklen_t*)&c);
 		if (client_sock < 0)
 		{
 			perror("accept failed");
@@ -110,8 +103,11 @@ void tcp_server::start()
 		puts("Connection accepted");
 #endif
 
-		char client_sock_ip[INET6_ADDRSTRLEN];
-		inet_ntop(AF_INET, get_in_addr((struct sockaddr *)&client), client_sock_ip, sizeof(client_sock_ip));
+		char client_sock_ip[INET6_ADDRSTRLEN + 1];
+		memset(client_sock_ip, '\0', sizeof(client_sock_ip));
+		inet_ntop(clientadd->sa_family,
+				  clientadd->sa_family == AF_INET ? clientadd->sa_family : clientadd->sin6_addr,
+				  client_sock_ip, INET6_ADDRSTRLEN);
 
 		//Receive a message from client
 		read_size = recv(client_sock , client_message, 2048, 0);

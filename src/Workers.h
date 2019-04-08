@@ -10,18 +10,21 @@ public:
 
 	typedef std::string Ip;
 	typedef std::string Port;
-	struct Worker : public std::pair<Ip, Port>
+	typedef std::pair<const Ip &, const Port &> WorkerId;
+	struct Worker
 	{
-		Worker() : ip(first), port(second)
+		inline bool operator<(const Worker & rhs) const
+		{
+			return WorkerId(ip, port) < WorkerId(rhs.ip, rhs.port);
+		}
+		Worker() : ip(""), port("")
 		{
 		}
-		Worker(const Port & iIp, const Port & iPort) : ip(first), port(second)
+		Worker(const Port & iIp, const Port & iPort) : ip(iIp), port(iPort)
 		{
-			ip = iIp;
-			port = iPort;
 		}
-		Ip & ip;
-		Port & port;
+		Ip ip;
+		Port port;
 	};
 	struct WorkerData
 	{
