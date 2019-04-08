@@ -55,17 +55,7 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 			const bool normal = (id % 100 < (100 - DONATE_RATIO - 1));
 			if((normal && !isDonate) || (!normal && isDonate)) // normal == isDonate
 			{
-				const std::string seek = toStr(ini) + " " + toStr(ini + steep);
-#ifndef NDEBUG
-				std::cout << it->first.ip << "/" << it->first.port << " : " << seek << std::endl;
-#endif
-				
-				const std::string packet = job + " " + seek;
-				
-				if(system((std::string("./udp_send.sh '" + it->first.ip + "/" + it->first.port + "' '") + packet + "'").c_str()))
-				{
-					std::cerr << "Fail to send job to worker: " << it->first.ip + "/" + it->first.port << std::endl;
-				}
+				broadcastTo(it->first, job, ini, steep);
 				
 				ini += steep + 1;
 			}
@@ -88,6 +78,25 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 		std::cout << "------------------------" << std::endl;
 	}
 #endif
+}
+
+void Workers::broadcastTo(const Worker & worker, const std::string & job, const size_t ini, const size_t steep)
+{
+	broadcastToFromTo(worker, job, ini, ini + steep);
+}
+void Workers::broadcastToFromTo(const Worker & worker, const std::string & job, const size_t ini, const size_t fini)
+{
+	const std::string seek = toStr(ini) + " " + toStr(fini);
+#ifndef NDEBUG
+	std::cout << worker.ip << "/" << worker.port << " : " << seek << std::endl;
+#endif
+	
+	const std::string packet = job + " " + seek;
+	
+	if(system((std::string("./udp_send.sh '" + worker.ip + "/" + worker.port + "' '") + packet + "'").c_str()))
+	{
+		std::cerr << "Fail to send job to worker: " << worker.ip + "/" + worker.port << std::endl;
+	}
 }
 
 void Workers::add(const Worker & worker)

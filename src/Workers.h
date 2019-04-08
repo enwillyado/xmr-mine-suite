@@ -28,7 +28,7 @@ public:
 	};
 	struct WorkerData
 	{
-		WorkerData() : size(1), hashes(0), lastHash(0), isDonate(false)
+		WorkerData() : size(0), hashes(0), lastHash(0), isDonate(false)
 		{
 		}
 		size_t size;
@@ -43,6 +43,9 @@ public:
 	static Workers & GetInstance();
 
 	void broadcast(const std::string & job, const bool isDonate);
+	void broadcastTo(const Worker & worker, const std::string & job, const size_t ini, const size_t steep);
+	void broadcastToFromTo(const Worker & worker, const std::string & job, const size_t ini, const size_t fini);
+	
 	void add(const Worker & worker);
 	void complete(const Worker & worker);
 	void remove(const Worker & worker);

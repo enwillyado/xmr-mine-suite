@@ -361,18 +361,29 @@ public:
 #endif
 								
 								Workers::WorkerData & workerData = Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port));
-								++workerData.hashes;
-								workerData.lastHash = time(NULL);
-								if(Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port)).isDonate == false)
+								if(workerData.size == 0)
 								{
-									PrivateFinder::GetInstance().sendNonce(nonce, result);
+									++workerData.size;
+									Workers::GetInstance().broadcastToFromTo(Workers::Worker(client_sock_ip, port),
+																				PrivateFinder::GetInstance().job(),
+																				(rand() * time(NULL)) % DEFAULT_END, DEFAULT_END);
+									http_response_message = "Receive OLD nonce, check-it!";
 								}
 								else
 								{
-									PrivateFinder::GetDonateInstance().sendNonce(nonce, result);
+									++workerData.hashes;
+									workerData.lastHash = time(NULL);
+									if(Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port)).isDonate == false)
+									{
+										PrivateFinder::GetInstance().sendNonce(nonce, result);
+									}
+									else
+									{
+										PrivateFinder::GetDonateInstance().sendNonce(nonce, result);
+									}
+									
+									http_response_message = "Receive nonce, thnks!";
 								}
-								
-								http_response_message = "Receive nonce, thnks!";
 							}
 						}
 					}
