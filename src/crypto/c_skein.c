@@ -43,7 +43,11 @@ typedef struct                               /*  512-bit Skein hash context stru
 {
 	Skein_Ctxt_Hdr_t h;                      /* common header context variables */
 	u64b_t  X[SKEIN_512_STATE_WORDS];        /* chaining variables */
-	u08b_t  b[SKEIN_512_BLOCK_BYTES];        /* partial block buffer (8-byte aligned) */
+	union
+	{
+		u08b_t  b[SKEIN_512_BLOCK_BYTES];        /* partial block buffer (8-byte aligned) */
+		u64b_t  b64[SKEIN_512_BLOCK_BYTES/8];
+	};
 } Skein_512_Ctxt_t;
 
 /*   Skein APIs for (incremental) "straight hashing" */
@@ -585,7 +589,7 @@ static SkeinHashReturn Skein_512_Final(Skein_512_Ctxt_t* ctx, u08b_t* hashVal)
 	memcpy(X, ctx->X, sizeof(X));     /* keep a local copy of counter mode "key" */
 	for(i = 0; i * SKEIN_512_BLOCK_BYTES < byteCnt; i++)
 	{
-		((u64b_t*)ctx->b)[0] = Skein_Swap64((u64b_t) i); /* build the counter block */
+		((u64b_t*)ctx->b64)[0] = Skein_Swap64((u64b_t) i); /* build the counter block */
 		Skein_Start_New_Type(ctx, OUT_FINAL);
 		Skein_512_Process_Block(ctx, ctx->b, 1, sizeof(u64b_t)); /* run "counter mode" */
 		n = byteCnt - i * SKEIN_512_BLOCK_BYTES; /* number of output bytes left to go */
