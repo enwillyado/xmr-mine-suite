@@ -31,7 +31,8 @@ public:
 		WorkerData() : size(1), isDonate(false)
 		{
 		}
-		int size;
+		size_t size;
+		size_t hashes;
 		bool isDonate;
 	};
 	typedef std::map<Worker, WorkerData> WorkersMap;
