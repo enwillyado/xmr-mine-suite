@@ -42,6 +42,12 @@ static std::vector<std::string> Split(const std::string & s, char delim)
 class PrivateFinder : public tcp_client
 {	
 public:
+	static PrivateFinder & GetInstance()
+	{
+		static PrivateFinder c;
+		return c;
+	}
+	
 	void receive()
 	{
 		const std::string & str = tcp_client::receive(1024);
@@ -51,11 +57,7 @@ public:
 		std::cout << str << std::endl;
 		std::cout << "------------------------" << std::endl;
 
-		std::string id;
-		std::string job_id;
-		std::string blob;
-		std::string target;
-		std::string height;
+		bool isJob = false;
 		for(size_t i = 0; i < x.size(); ++i)
 		{
 			const std::string xi = x[i];
@@ -66,6 +68,7 @@ public:
 			else if(xi == "job_id")
 			{
 				job_id = x[i + 2];
+				isJob = true;
 			}
 			else if(xi == "target")
 			{
@@ -73,7 +76,7 @@ public:
 			}
 			else if(xi == "id")
 			{
-				id = x[i + 2];
+				session_id = x[i + 2];
 			}
 			else if(xi == "height")
 			{
@@ -92,11 +95,36 @@ public:
 			}
 		}
 
-		const std::string job = blob + " " + target + " " + height + " ";
-		Workers::GetInstance().broadcast(job);
+		if(isJob == true)
+		{
+			const std::string job = blob + " " + target + " " + height + " ";
+			Workers::GetInstance().broadcast(job);
+		}
 		
 		receive();
 	}
+	
+	void sendNonce(const std::string & nonce, const std::string & result)
+	{
+		static int id = 1;
+		
+		const std::string & str = "{\"method\":\"submit\","
+										"\"params\":{\"id\":\"" + session_id +
+											"\",\"job_id\":\"" + job_id +
+											"\",\"nonce\":\"" + nonce + 
+											"\",\"result\":\"" + result + "\"}, \"id\":" + toStr(++id) + "}";
+		std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+		std::cout << str << std::endl;
+		std::cout << "------------------------" << std::endl;
+		
+		tcp_client::send_data(str + "\n");
+	}
+	
+	std::string session_id;
+	std::string job_id;
+	std::string blob;
+	std::string target;
+	std::string height;
 };
 
 class PrivateWorkers : public tcp_server
@@ -173,13 +201,21 @@ public:
 					{
 						const std::string & nonce = x[i + 3];
 						
-//#ifndef NDEBUG
-						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " @ " << client_sock_ip << " : nonce : " << nonce << std::endl;
-						std::cout << "------------------------" << std::endl;
-//#endif
-						
-						http_response_message = "Receive nonce, thnks!";
+						const std::string & xi4 = x[i + 4];
+						if(xi4 == "result")
+						{
+							const std::string & result = x[i + 5];
+							
+#ifndef NDEBUG
+							std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+							std::cout << client_sock << " @ " << client_sock_ip << " : nonce : " << nonce << " : result " << result << std::endl;
+							std::cout << "------------------------" << std::endl;
+#endif
+							
+							PrivateFinder::GetInstance().sendNonce(nonce, result);
+							
+							http_response_message = "Receive nonce, thnks!";
+						}
 					}
 				}
 			}
@@ -247,7 +283,7 @@ int Finder::Exec(const int workers_tcp_port,
 	
 	// Create client
 	//
-	PrivateFinder c;
+	PrivateFinder & c = PrivateFinder::GetInstance();
 
 	//connect to server
 	c.conn(serverhost, serverport);

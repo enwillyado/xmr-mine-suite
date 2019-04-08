@@ -205,6 +205,18 @@ bool Job::toHex(const char* const in, const size_t size, char* out)
 	return true;
 }
 
+std::string Job::toHex(const char* const in, const size_t size)
+{
+	char* out = new char[size * 2];
+	for(size_t i = 0; i < size; ++i)
+	{
+		out[i * 2] = hf_bin2hex((in[i] & 0xF0) >> 4);
+		out[i * 2 + 1] = hf_bin2hex(in[i] & 0x0F);
+	}
+	std::string ret = out;
+	delete [] out;
+	return ret;
+}
 
 bool Job::operator==(const Job & other) const
 {

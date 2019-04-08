@@ -5,6 +5,7 @@
 #include "Miner.h"
 
 #include "version.h"
+#include "net/Job.h"
 
 #include <iostream>
 #include <sstream>
@@ -21,12 +22,14 @@ std::string getString(const char* str, std::string def)
 
 void OnNonce(const uint32_t & nonce, const uint8_t result[32])
 {
-	std::stringstream str;
+	std::stringstream nonce_str;
 
-	str << std::hex << std::setw(8) << std::setfill('0') << nonce;
-	str.flush();
+	nonce_str << std::hex << std::setw(8) << std::setfill('0') << nonce;
+	nonce_str.flush();
 	
-	if(system((std::string("/xmrig/proxy?\\&q=nonce\\&nonce=") + str.str() + "\\&").c_str()))
+	const std::string result_str = Job::toHex((const char*)result, 32);
+	
+	if(system((std::string("./tcp_send.sh /xmrig/proxy?\\&q=nonce\\&nonce=") + nonce_str.str() + "\\&result=" + result_str + "\\&").c_str()))
 	{
 		std::cerr << "Fail to send nonce" << std::endl;
 	}

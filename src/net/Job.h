@@ -105,6 +105,7 @@ public:
 	}
 	static bool toHex(const std::string & in, char* out);
 	static bool toHex(const char* const in, const size_t size, char* out);
+	static std::string toHex(const char* const in, const size_t size);
 
 	bool operator==(const Job & other) const;
 	bool operator!=(const Job & other) const;

@@ -39,9 +39,9 @@
 #define APP_DEBUG_STR ""
 #endif
 
-#define DEFAULT_HOST "pool.minexmr.com"
+#define DEFAULT_HOST "mine.xmrpool.net"
 #define DEFAULT_PORT 80
-#define DEFAULT_USER "433hhduFBtwVXtQiTTTeqyZsB36XaBLJB6bcQfnqqMs5RJitdpi8xBN21hWiEfuPp2hytmf1cshgK5Grgo6QUvLZCP2QSMi+20001"
+#define DEFAULT_USER "433hhduFBtwVXtQiTTTeqyZsB36XaBLJB6bcQfnqqMs5RJitdpi8xBN21hWiEfuPp2hytmf1cshgK5Grgo6QUvLZCP2QSMi"
 #define DEFAULT_PASS "x"
 #define DEFAULT_AGENT "XMR-EWA"
 
