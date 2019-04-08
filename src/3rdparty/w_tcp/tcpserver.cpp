@@ -106,7 +106,7 @@ void tcp_server::start()
 		char client_sock_ip[INET6_ADDRSTRLEN + 1];
 		memset(client_sock_ip, '\0', sizeof(client_sock_ip));
 		inet_ntop(clientadd->sa_family,
-				  clientadd->sa_family == AF_INET ? clientadd->sa_family : clientadd->sin6_addr,
+				  clientadd->sa_family == AF_INET ? client->sin_addr : client->sin6_addr,
 				  client_sock_ip, INET6_ADDRSTRLEN);
 
 		//Receive a message from client
