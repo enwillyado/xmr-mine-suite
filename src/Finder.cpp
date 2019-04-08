@@ -61,24 +61,31 @@ public:
 		for(size_t i = 0; i < x.size(); ++i)
 		{
 			const std::string xi = x[i];
-			if(xi == "blob")
+			if(xi == "method")
+			{
+				const std::string xi2 = x[i + 2];
+				if(xi2 == "job")
+				{
+					isJob = true;
+				}
+			}
+			else if(xi == "blob" && isJob)
 			{
 				blob = x[i + 2];
 			}
-			else if(xi == "job_id")
+			else if(xi == "job_id" && isJob)
 			{
 				job_id = x[i + 2];
-				isJob = true;
 			}
-			else if(xi == "target")
+			else if(xi == "target" && isJob)
 			{
 				target = x[i + 2];
 			}
-			else if(xi == "id")
+			else if(xi == "id" && isJob)
 			{
 				session_id = x[i + 2];
 			}
-			else if(xi == "height")
+			else if(xi == "height" && isJob)
 			{
 				for(size_t iii = 0; iii < x[i + 1].size(); ++iii)
 				{
@@ -91,7 +98,6 @@ public:
 			}
 			else
 			{
-
 			}
 		}
 
