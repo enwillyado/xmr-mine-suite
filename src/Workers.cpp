@@ -97,7 +97,7 @@ void Workers::add(const Worker & worker)
 }
 void Workers::complete(const Worker & worker)
 {
-	workersMap[worker].size++;
+	++workersMap[worker].size;
 }
 void Workers::remove(const Worker & worker)
 {
@@ -106,5 +106,5 @@ void Workers::remove(const Worker & worker)
 
 const Workers::WorkerData & Workers::getWorkerData(const Worker & worker) const
 {
-	return workersMap[worker];
+	return workersMap.at(worker);
 }
