@@ -15,6 +15,7 @@ public:
 	tcp_server();
 	bool create(const int port);
 	void start();
+	bool stop();
 	
 	virtual void getMessage(const int client_sock, const std::string & client_sock_ip, const std::string & client_message);
 	virtual void getDisconect(const int client_sock, const std::string & client_sock_ip);

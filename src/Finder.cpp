@@ -563,6 +563,8 @@ int Finder::Exec(const int workers_tcp_port,
 
 	std::cout << "Quitting..." << std::endl;
 	
+	workers_server.stop();
+	
 	//done
 	return 0;
 }

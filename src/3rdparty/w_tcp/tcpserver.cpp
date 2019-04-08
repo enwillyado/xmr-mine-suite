@@ -59,6 +59,15 @@ bool tcp_server::create(const int port)
 	server.sin_addr.s_addr = INADDR_ANY;
 	server.sin_port = htons( port );
 	
+	int tr = 1;
+
+	// kill "Address already in use" error message
+	if (setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, &tr, sizeof(int)) == -1)
+	{
+		perror("setsockopt");
+		exit(1);
+	}
+
 	//Bind
 	if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
 	{
@@ -98,8 +107,8 @@ void tcp_server::start()
 	
 	c = sizeof(struct sockaddr_in);
 	
-	//accept connection from an incoming client
-	while(true)
+	//accept connection from an incoming client while socket descriptor is valid
+	while(socket_desc != -1)
 	{
 		client_sock = accept(socket_desc, clientadd, (socklen_t*)&c);
 		if (client_sock < 0)
@@ -137,4 +146,18 @@ void tcp_server::start()
 	}
 	
 	return;
+}
+
+bool tcp_server::stop()
+{	
+	if (socket_desc == -1)
+	{
+		return false;
+	}
+	
+	shutdown(socket_desc, SHUT_RDWR);
+	close(socket_desc);
+	
+	socket_desc = -1;
+	return true;
 }
