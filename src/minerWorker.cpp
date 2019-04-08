@@ -22,14 +22,23 @@ std::string getString(const char* str, std::string def)
 
 void OnNonce(const uint32_t & nonce, const uint8_t result[32])
 {
+#ifdef NONCE_BASE0
 	std::stringstream nonce_str;
 
 	nonce_str << std::hex << std::setw(8) << std::setfill('0') << nonce;
 	nonce_str.flush();
 	
-	const std::string result_str = Job::toHex((const char*)result, 32);
+	const std::string nonce_hex_str = nonce_str.str();
+#else	
+	const std::string nonce_hex_str = Job::toHex(reinterpret_cast<const unsigned char*>(&nonce), 4);
+#endif
+	const std::string result_hex_str = Job::toHex(reinterpret_cast<const unsigned char*>(result), 32);
+
+#ifndef NDEBUG
+	std::cout << "Nonce: " << nonce_hex_str << " & result: " << result_hex_str << std::endl;
+#endif
 	
-	if(system((std::string("./tcp_send.sh /xmrig/proxy?\\&q=nonce\\&nonce=") + nonce_str.str() + "\\&result=" + result_str + "\\&").c_str()))
+	if(system((std::string("./tcp_send.sh /xmrig/proxy?\\&q=nonce\\&nonce=") + nonce_hex_str + "\\&result=" + result_hex_str + "\\&").c_str()))
 	{
 		std::cerr << "Fail to send nonce" << std::endl;
 	}

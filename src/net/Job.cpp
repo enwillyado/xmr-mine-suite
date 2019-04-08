@@ -205,7 +205,7 @@ bool Job::toHex(const char* const in, const size_t size, char* out)
 	return true;
 }
 
-std::string Job::toHex(const char* const in, const size_t size)
+std::string Job::toHex(const unsigned char* const in, const size_t size)
 {
 	char* out = new char[size * 2];
 	for(size_t i = 0; i < size; ++i)

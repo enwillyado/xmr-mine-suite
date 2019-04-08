@@ -37,7 +37,7 @@ enum Variant
 	VARIANT_0    =  0,  // Original CryptoNight or CryptoNight-Heavy
 	VARIANT_1    =  1,  // CryptoNight variant 1 also known as Monero7 and CryptoNightV7
 	VARIANT_2    =  2,  // CryptoNight variant 2
-	VARIANT_4    = 14, // CryptoNightR (Monero's variant 4)
+	VARIANT_4    =  4, // CryptoNightR (Monero's variant 4)
 	VARIANT_MAX
 };
 
@@ -105,7 +105,7 @@ public:
 	}
 	static bool toHex(const std::string & in, char* out);
 	static bool toHex(const char* const in, const size_t size, char* out);
-	static std::string toHex(const char* const in, const size_t size);
+	static std::string toHex(const unsigned char* const in, const size_t size);
 
 	bool operator==(const Job & other) const;
 	bool operator!=(const Job & other) const;

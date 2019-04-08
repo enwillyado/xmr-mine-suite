@@ -20,6 +20,10 @@ int Miner::Exec(const std::string & blob, const std::string & target, const uint
 int Miner::Exec(const std::string & blob, const std::string & target, const uint64_t & height,
 				const OnNonce onNonce, const uint32_t & ini, const uint32_t & end)
 {
+#ifndef NDEBUG
+	CryptoNight::selfTest();
+#endif
+	
 	// Create and set job
 	//
 	Job job;

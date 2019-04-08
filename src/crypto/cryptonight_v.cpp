@@ -802,15 +802,15 @@ void CryptoNight::cryptonight_hash_ctx<VARIANT_0>(uint8_t *__restrict__ output, 
 template<>
 void CryptoNight::cryptonight_hash_ctx<VARIANT_1>(uint8_t *__restrict__ output, const uint8_t *__restrict__ input, size_t size, cryptonight_ctx **__restrict__ ctx, const uint64_t height)
 {
-	cryptonight_hash_ctx_t<VARIANT_0>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
+	cryptonight_hash_ctx_t<VARIANT_1>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
 }
 template<>
 void CryptoNight::cryptonight_hash_ctx<VARIANT_2>(uint8_t *__restrict__ output, const uint8_t *__restrict__ input, size_t size, cryptonight_ctx **__restrict__ ctx, const uint64_t height)
 {
-	cryptonight_hash_ctx_t<VARIANT_0>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
+	cryptonight_hash_ctx_t<VARIANT_2>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
 }
 template<>
 void CryptoNight::cryptonight_hash_ctx<VARIANT_4>(uint8_t *__restrict__ output, const uint8_t *__restrict__ input, size_t size, cryptonight_ctx **__restrict__ ctx, const uint64_t height)
 {
-	cryptonight_hash_ctx_t<VARIANT_0>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
+	cryptonight_hash_ctx_t<VARIANT_4>((uint8_t*)output, (uint8_t*)input, size, ctx, height);
 }
