@@ -468,9 +468,18 @@ int Finder::Exec(const int workers_tcp_port,
 			case 'h':
 					std::cout << "- 'q': quit server." << std::endl;
 					std::cout << "- 'h': get this help." << std::endl;
-					std::cout << "- 'l': list all workers." << std::endl;
+					std::cout << "- 'n': show number of registred workers." << std::endl;
+					std::cout << "- 'l': list all registred workers." << std::endl;
 				break;
 				
+			case 'n':
+			{
+				size_t id = 0;
+				const Workers::WorkersMap & workersMap = Workers::GetInstance().get();
+				std::cout << "=== There are (" << workersMap.size() << ") workers registred ===" << std::endl;
+			}
+				break;
+			
 			case 'l':
 			{
 				size_t id = 0;
