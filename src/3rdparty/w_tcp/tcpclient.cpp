@@ -60,6 +60,54 @@ tcp_client::tcp_client()
 	connected = false;
 }
 
+std::string resolve_address(const std::string & address)
+{
+	//setup address structure
+	if(inet_addr(address.c_str()) == INADDR_NONE)
+	{
+		struct hostent* he;
+		struct in_addr** addr_list;
+
+		//resolve the hostname, its not an ip address
+		if((he = gethostbyname(address.c_str())) == NULL)
+		{
+			//gethostbyname failed
+			perror("Failed to resolve hostname");
+
+			return "";
+		}
+
+		//Cast the h_addr_list to in_addr , since h_addr_list also has the ip address in long format only
+		addr_list = (struct in_addr**) he->h_addr_list;
+
+		for(int i = 0; addr_list[i] != NULL; i++)
+		{
+#ifndef NDEBUG
+			std::cout << address << " resolved to " << inet_ntoa(*addr_list[i]) << std::endl;
+#endif
+
+			return inet_ntoa(*addr_list[i]);
+		}
+		
+		return "";
+	}
+
+	//plain ip address
+	return address;
+}
+
+#include <map>
+
+std::string tcp_client::resolve(const std::string & address)
+{
+	static std::map<std::string, std::string> dns;
+	if(dns[address] != "")
+	{
+		return dns[address];
+	}
+	return dns[address] = resolve_address(address);
+}
+
 /**
 	Connect to a host on a certain port number
 */
@@ -76,44 +124,9 @@ bool tcp_client::conn(const std::string & address, const int port)
 		}
 
 	}
-
-	//setup address structure
-	if(inet_addr(address.c_str()) == INADDR_NONE)
-	{
-		struct hostent* he;
-		struct in_addr** addr_list;
-
-		//resolve the hostname, its not an ip address
-		if((he = gethostbyname(address.c_str())) == NULL)
-		{
-			//gethostbyname failed
-			perror("Failed to resolve hostname");
-
-			return false;
-		}
-
-		//Cast the h_addr_list to in_addr , since h_addr_list also has the ip address in long format only
-		addr_list = (struct in_addr**) he->h_addr_list;
-
-		for(int i = 0; addr_list[i] != NULL; i++)
-		{
-			//strcpy(ip , inet_ntoa(*addr_list[i]) );
-			server.sin_addr = *addr_list[i];
-
-#ifndef NDEBUG
-			std::cout << address << " resolved to " << inet_ntoa(*addr_list[i]) << std::endl;
-#endif
-
-			break;
-		}
-	}
-
-	//plain ip address
-	else
-	{
-		server.sin_addr.s_addr = inet_addr(address.c_str());
-	}
-
+	
+	server.sin_addr.s_addr = inet_addr(resolve(address).c_str());
+	
 	server.sin_family = AF_INET;
 	server.sin_port = htons(port);
 

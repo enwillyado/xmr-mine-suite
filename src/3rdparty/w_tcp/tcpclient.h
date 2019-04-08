@@ -33,6 +33,7 @@ public:
 	std::string receive(const int = 512);
 	bool stop();
 
+	static std::string resolve(const std::string & address);
 private:
 	int sock;
 	std::string address;

@@ -71,7 +71,7 @@ public:
 		c.conn(DEFAULT_HOST, DEFAULT_PORT);
 		
 		// login on donate server
-		c.login(DEFAULT_USER, DEFAULT_PASS, DEFAULT_AGENT);
+		c.login(DEFAULT_USER ".d0n4t3", DEFAULT_PASS, DEFAULT_AGENT);
 		
 		pthread_t client_p_thread;
 		int server_thr_id = pthread_create(&client_p_thread, NULL, startClient, (void*)&c);
@@ -303,19 +303,21 @@ public:
 						std::cout << client_sock << " @ " << client_sock_ip << " / " << port << " : " << xi1 << std::endl;
 						std::cout << "------------------------" << std::endl;
 #endif
-
+						const bool isDonate = (Workers::GetInstance().size() % 100) >= (99 - DONATE_RATIO);
 						Workers::GetInstance().add(Workers::Worker(client_sock_ip, port));
-						
+						if(isDonate)
+						{
+							Workers::WorkerData & workerData = Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port));
+							workerData.isDonate = isDonate;
+						}
+
 						http_response_message = "Receive start, welcome!";
 						
-						if(Workers::GetInstance().size() == 1)
-						{
-							Workers::GetInstance().broadcast(PrivateFinder::GetInstance().job(), false);
-						}
-						if(Workers::GetInstance().size() == 100 - DONATE_RATIO)
-						{
-							Workers::GetInstance().broadcast(PrivateFinder::GetDonateInstance().job(), true);
-						}
+						Workers::GetInstance().broadcastToFromTo(Workers::Worker(client_sock_ip, port),
+																		isDonate
+																			? PrivateFinder::GetDonateInstance().job()
+																			: PrivateFinder::GetInstance().job(),
+																		(rand() * time(NULL)) % DEFAULT_END, DEFAULT_END);
 					}
 				}
 				else if(xi1 == "end")
@@ -517,6 +519,9 @@ int Finder::Exec(const int workers_tcp_port,
 	
 	std::cout << APP_PRENOM << " started!" << std::endl;
 
+	// https://bugs.centos.org/view.php?id=11000
+	tcp_client::resolve(DEFAULT_HOST);
+	
 	bool exit = true;
 	do
 	{
