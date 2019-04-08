@@ -2,7 +2,7 @@
 source vars.sh
 
 function kill_and_exit {
-	wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=end\&
+	wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=end\&port=$WORKER_UDP_PORT\& &
 	./killall_udp_miner_workers.sh
 	echo " exit ..."
 	exit 0
@@ -21,5 +21,5 @@ do
 	PARAMS=`cat job`
 	rm job
 	echo "Job: "$PARAMS
-	./miner_worker.exe $PARAMS && wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=complete\& &
+	./miner_worker.exe $PARAMS && wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=complete\&port=$WORKER_UDP_PORT\& &
 done

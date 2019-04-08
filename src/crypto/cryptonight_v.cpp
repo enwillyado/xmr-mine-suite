@@ -472,12 +472,8 @@ static inline void cryptonight_monero_tweak(uint64_t* mem_out, const uint8_t* l,
 template<USES SOFT_AES, Variant VARIANT>
 inline void cryptonight_single_hash(uint8_t *__restrict__ output, const uint8_t *__restrict__ input, size_t size, cryptonight_ctx **__restrict__ ctx, uint64_t height)
 {
-	constexpr size_t MASK         = CRYPTONIGHT_MASK;
-    constexpr size_t ITERATIONS   = CRYPTONIGHT_ITER;
-		
-    static_assert(MASK > 0 && ITERATIONS > 0 && CRYPTONIGHT_MEMORY > 0, "unsupported algorithm/variant");
-
-    if (VARIANT == VARIANT_1 && size < 43) {
+    if (VARIANT == VARIANT_1 && size < 43)
+	{
         memset(output, 0, 32);
         return;
     }
@@ -502,15 +498,15 @@ inline void cryptonight_single_hash(uint8_t *__restrict__ output, const uint8_t 
 
     uint64_t idx0 = al0;
 
-    for (size_t i = 0; i < ITERATIONS; i++) {
+    for (size_t i = 0; i < CRYPTONIGHT_ITER; i++) {
         __m128i cx;
         if (USE_SOFT_AES != SOFT_AES) {
-            cx = _mm_load_si128((__m128i *) &l0[idx0 & MASK]);
+            cx = _mm_load_si128((__m128i *) &l0[idx0 & CRYPTONIGHT_MASK]);
         }
 
         const __m128i ax0 = _mm_set_epi64x(ah0, al0);
         if (USE_SOFT_AES == SOFT_AES) {
-            cx = soft_aesenc((uint32_t*)&l0[idx0 & MASK], ax0, (const uint32_t*)saes_table);
+            cx = soft_aesenc((uint32_t*)&l0[idx0 & CRYPTONIGHT_MASK], ax0, (const uint32_t*)saes_table);
         }
         else {
             cx = _mm_aesenc_si128(cx, ax0);
@@ -518,18 +514,18 @@ inline void cryptonight_single_hash(uint8_t *__restrict__ output, const uint8_t 
 
         if (VARIANT == VARIANT_1 || VARIANT == VARIANT_2 || VARIANT == VARIANT_4)
 		{
-            cryptonight_monero_tweak<VARIANT>((uint64_t*)&l0[idx0 & MASK], l0, idx0 & MASK, ax0, bx0, bx1, cx);
+            cryptonight_monero_tweak<VARIANT>((uint64_t*)&l0[idx0 & CRYPTONIGHT_MASK], l0, idx0 & CRYPTONIGHT_MASK, ax0, bx0, bx1, cx);
         }
 		else
 		{
-            _mm_store_si128((__m128i *)&l0[idx0 & MASK], _mm_xor_si128(bx0, cx));
+            _mm_store_si128((__m128i *)&l0[idx0 & CRYPTONIGHT_MASK], _mm_xor_si128(bx0, cx));
         }
 
         idx0 = _mm_cvtsi128_si64(cx);
 
         uint64_t hi, lo, cl, ch;
-        cl = ((uint64_t*) &l0[idx0 & MASK])[0];
-        ch = ((uint64_t*) &l0[idx0 & MASK])[1];
+        cl = ((uint64_t*) &l0[idx0 & CRYPTONIGHT_MASK])[0];
+        ch = ((uint64_t*) &l0[idx0 & CRYPTONIGHT_MASK])[1];
 
 		if (VARIANT == VARIANT_4)
 		{
@@ -547,25 +543,25 @@ inline void cryptonight_single_hash(uint8_t *__restrict__ output, const uint8_t 
 
 		if (VARIANT == VARIANT_4)
 		{
-			VARIANT2_SHUFFLE(l0, idx0 & MASK, ax0, bx0, bx1, cx, 0);
+			VARIANT2_SHUFFLE(l0, idx0 & CRYPTONIGHT_MASK, ax0, bx0, bx1, cx, 0);
 		}
 		else if (VARIANT == VARIANT_2)
 		{
-			VARIANT2_SHUFFLE2(l0, idx0 & MASK, ax0, bx0, bx1, hi, lo, 0);
+			VARIANT2_SHUFFLE2(l0, idx0 & CRYPTONIGHT_MASK, ax0, bx0, bx1, hi, lo, 0);
 		}
 
         al0 += hi;
         ah0 += lo;
 
-        ((uint64_t*)&l0[idx0 & MASK])[0] = al0;
+        ((uint64_t*)&l0[idx0 & CRYPTONIGHT_MASK])[0] = al0;
 
         if (VARIANT == VARIANT_1)
 		{
-            ((uint64_t*)&l0[idx0 & MASK])[1] = ah0 ^ tweak1_2_0;
+            ((uint64_t*)&l0[idx0 & CRYPTONIGHT_MASK])[1] = ah0 ^ tweak1_2_0;
         }
 		else
 		{
-            ((uint64_t*)&l0[idx0 & MASK])[1] = ah0;
+            ((uint64_t*)&l0[idx0 & CRYPTONIGHT_MASK])[1] = ah0;
         }
 
         al0 ^= cl;

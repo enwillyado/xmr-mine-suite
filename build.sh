@@ -3,7 +3,7 @@
 FLAGS_BASIC=" -Wall -DNDEBUG"
 FLAGS_COMPILER="-maes -Ofast -march=native -mtune=native"
 FLAGS_COMPILER_C=""
-FLAGS_COMPILER_CPP="-DWITH_ASM_INTEL"
+FLAGS_COMPILER_CPP="-std=c++11 -DWITH_ASM_INTEL"
 FLAGS_LINKER="-static"
 
 mkdir -p obj
