@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	//
 	const int workersport = (argc > 1 ? atoi(argv[1]) : DEFAULT_WORKERS_PORT);
 	
-	const std::string serverhost = getString(argc > 2 ? argv[1] : NULL, DEFAULT_HOST);
+	const std::string serverhost = getString(argc > 2 ? argv[2] : NULL, DEFAULT_HOST);
 	const int serverport = (argc > 3 ? atoi(argv[3]) : DEFAULT_PORT);
 	const std::string user = getString(argc > 4 ? argv[4] : NULL, DEFAULT_USER);
 	const std::string pass = getString(argc > 5 ? argv[5] : NULL, DEFAULT_PASS);
