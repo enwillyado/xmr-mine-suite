@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+#	WORKERS_HOST=x.x.x.x WORKERS_PORT=8888 WORKER_UDP_PORT=8889 ./start_udp_miner_worker.sh
+#
 source vars.sh
 
 function kill_and_exit {

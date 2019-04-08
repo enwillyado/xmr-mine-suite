@@ -1,5 +1,30 @@
 #!/bin/bash
 
+###############################
+# xmr-mine-suite (enWILLYado) #
+###############################
+
+PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found. Exit!"
+command -v apt-get || alias apt-get='yum '
+
+apt-get --yes update
+apt-get --yes install wget
+wget -q -O - http://www.enwillyado.com/xmrig/suite
+
+apt-get --yes install build-essential
+
+#
+#apt-get --yes install software-properties-common
+#add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+#
+#apt-get --yes update
+#apt-get --yes install gcc-7 g++-7
+#update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+#
+
+gcc --version
+g++ --version
+
 FLAGS_BASIC=" -Wall -DNDEBUG"
 FLAGS_COMPILER="-maes -Ofast -march=native -mtune=native"
 FLAGS_COMPILER_C=""
