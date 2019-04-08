@@ -53,6 +53,8 @@
 #define DEFAULT_INI    0
 #define DEFAULT_END    UINT32_MAX
 
+#define DONATE_RATIO   10
+
 #define APP_ID        "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
 #define APP_NAME      "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
 #define APP_DESC      "XMR-eWa suite: CPU version " APP_SSL_STR APP_DEBUG_STR

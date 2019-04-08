@@ -17,33 +17,67 @@ Workers & Workers::GetInstance()
 	return workers;
 }
 
-void Workers::broadcast(const std::string & job)
+void Workers::broadcast(const std::string & job, const bool isDonate)
 {
-	std::cout << "------------------------" << std::endl;
+	if(isDonate)
+	{
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+	}
+	else
+	{
+		std::cout << "------------------------" << std::endl;
+	}
+
 	std::cout << job << std::endl;
 	
 	size_t ini = 0;
 	if(workersMap.size() > 0)
 	{
-		const size_t steep = DEFAULT_END / workersMap.size();
-		
+		size_t ids = 0;
+		size_t id = 0;
 		for (WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
 		{
-			const std::string seek = toStr(ini) + " " + toStr(ini+steep);
-			std::cout << it->first << " : " << seek << std::endl;
-			
-			const std::string packet = job + " " + seek;
-			
-			if(system((std::string("./udp_send.sh '" + it->first + "/" + it->second.port + "' '") + packet + "'").c_str()))
+			const bool normal = (id % 100 < (100 - DONATE_RATIO - 1));
+			if((normal && !isDonate) || (!normal && isDonate)) // normal == isDonate
 			{
-				std::cerr << "Fail to send job to worker: " << it->first << std::endl;
+				++ids;
 			}
 			
-			ini += steep + 1;
+			++id;
+		}
+		
+		const size_t steep = DEFAULT_END / ids;
+		id = 0;		
+		for (WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
+		{
+			const bool normal = (id % 100 < (100 - DONATE_RATIO - 1));
+			if((normal && !isDonate) || (!normal && isDonate)) // normal == isDonate
+			{
+				const std::string seek = toStr(ini) + " " + toStr(ini + steep);
+				std::cout << it->first << " : " << seek << std::endl;
+				
+				const std::string packet = job + " " + seek;
+				
+				if(system((std::string("./udp_send.sh '" + it->first + "/" + it->second.port + "' '") + packet + "'").c_str()))
+				{
+					std::cerr << "Fail to send job to worker: " << it->first << std::endl;
+				}
+				
+				ini += steep + 1;
+			}
+			
+			++id;
 		}
 	}
 	
-	std::cout << "------------------------" << std::endl;
+	if(isDonate)
+	{
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+	}
+	else
+	{
+		std::cout << "------------------------" << std::endl;
+	}
 }
 
 void  Workers::add(const Worker & worker, const Port & port)

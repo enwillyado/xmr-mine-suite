@@ -40,7 +40,16 @@ static std::vector<std::string> Split(const std::string & s, char delim)
 }
 
 class PrivateFinder : public tcp_client
-{	
+{
+	static void* startClient(void* data)
+	{
+		PrivateFinder* client = static_cast<PrivateFinder*>(data);
+		if(client != NULL)
+		{
+			client->receive();
+		}
+		return data;
+	}
 public:
 	static PrivateFinder & GetInstance()
 	{
@@ -48,14 +57,60 @@ public:
 		return c;
 	}
 	
+	static PrivateFinder & CreateDonateInstance()
+	{
+		// Create donate client
+		//
+		static PrivateFinder c;
+
+		//connect to donate server
+		c.conn(DEFAULT_HOST, DEFAULT_PORT);
+		
+		// login on donate server
+		c.login(DEFAULT_USER, DEFAULT_PASS, DEFAULT_AGENT);
+		
+		pthread_t client_p_thread;
+		int server_thr_id = pthread_create(&client_p_thread, NULL, startClient, (void*)&c);
+		if(server_thr_id < 0)
+		{
+#ifndef NDEBUG
+			std::cerr << "Fail to create donate client instance" << std::endl;
+#endif
+			return GetInstance();
+		}
+		
+		return c;
+	}
+	static PrivateFinder & GetDonateInstance()
+	{
+		static PrivateFinder & c = CreateDonateInstance();
+		return c;
+	}
+	
+	void login(const std::string & user, const std::string & pass, const std::string & agent)
+	{
+		const std::string & str = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
+								"\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}";
+#ifndef NDEBUG
+		std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
+		std::cout << str << std::endl;
+		std::cout << "------------------------" << std::endl;
+#endif
+		
+		//send some data
+		send_data(str + "\n");
+	}
+	
 	void receive()
 	{
 		const std::string & str = tcp_client::receive(1024);
 		std::vector<std::string> x = Split(str, '"');
 
+#ifndef NDEBUG
 		std::cout << "-<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
 		std::cout << str << std::endl;
 		std::cout << "------------------------" << std::endl;
+#endif
 
 		bool isJob = false;
 		for(size_t i = 0; i < x.size(); ++i)
@@ -103,8 +158,7 @@ public:
 
 		if(isJob == true)
 		{
-			const std::string job = blob + " " + target + " " + height + " ";
-			Workers::GetInstance().broadcast(job);
+			Workers::GetInstance().broadcast(job(), this != &GetInstance());
 		}
 		
 		receive();
@@ -119,13 +173,21 @@ public:
 											"\",\"job_id\":\"" + job_id +
 											"\",\"nonce\":\"" + nonce + 
 											"\",\"result\":\"" + result + "\"}, \"id\":" + toStr(++id) + "}";
+#ifndef NDEBUG
 		std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
 		std::cout << str << std::endl;
 		std::cout << "------------------------" << std::endl;
-		
+#endif
 		tcp_client::send_data(str + "\n");
 	}
 	
+	
+	const std::string & job() const
+	{
+		return blob + " " + target + " " + height + " ";
+	}
+	
+private:
 	std::string session_id;
 	std::string job_id;
 	std::string blob;
@@ -176,6 +238,15 @@ public:
 						Workers::GetInstance().add(client_sock_ip, port);
 						
 						http_response_message = "Receive start, welcome!";
+						
+						if(Workers::GetInstance().size() == 1)
+						{
+							Workers::GetInstance().broadcast(PrivateFinder::GetInstance().job(), false);
+						}
+						if(Workers::GetInstance().size() == 100 - DONATE_RATIO)
+						{
+							Workers::GetInstance().broadcast(PrivateFinder::GetDonateInstance().job(), true);
+						}
 					}
 				}
 				else if(xi1 == "end")
@@ -286,7 +357,7 @@ int Finder::Exec(const int workers_tcp_port,
 		std::cerr << "Fail to start workers_server" << std::endl;
 		return -1;
 	}
-	
+		
 	// Create client
 	//
 	PrivateFinder & c = PrivateFinder::GetInstance();
@@ -294,16 +365,10 @@ int Finder::Exec(const int workers_tcp_port,
 	//connect to server
 	c.conn(serverhost, serverport);
 	
-	const std::string & str = "{\"id\":1,\"jsonrpc\":\"2.0\",\"method\":\"login\",\"params\":{\"login\":\"" + user +
-							"\",\"pass\":\"" + pass + "\",\"agent\":\"" + agent + "\"}}";
-	std::cout << "->>>>>>>>>>>>>>>>>>>>>>>" << std::endl;
-	std::cout << str << std::endl;
-	std::cout << "------------------------" << std::endl;
-	
-	//send some data
-	c.send_data(str + "\n");
+	// login on server
+	c.login(user, pass, agent);
 
-	//receive and echo reply
+	//receive bucle and echo reply
 	c.receive();
 
 	//done

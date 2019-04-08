@@ -26,8 +26,13 @@ class Workers
 public:	
 	static Workers & GetInstance();
 
-	void broadcast(const std::string & job);
+	void broadcast(const std::string & job, const bool isDonate);
 	void add(const Worker & worker, const Port & port);
 	void complete(const Worker & worker);
 	void remove(const Worker & worker);
+	
+	inline size_t size() const
+	{
+		return workersMap.size();
+	}
 };

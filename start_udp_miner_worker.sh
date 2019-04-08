@@ -12,7 +12,7 @@ trap kill_and_exit SIGINT SIGTERM
 
 ./killall_udp_miner_workers.sh
 
-wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=start\&port=$WORKER_UDP_PORT\&
+wget -q -O - http://$WORKERS_HOST:$WORKERS_PORT/xmrig/proxy?\&q=start\&port=$WORKER_UDP_PORT\& &
 
 while :
 do
