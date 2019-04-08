@@ -103,8 +103,3 @@ void Workers::remove(const Worker & worker)
 {
 	workersMap.erase(worker);
 }
-
-const Workers::WorkerData & Workers::getWorkerData(const Worker & worker) const
-{
-	return workersMap.at(worker);
-}

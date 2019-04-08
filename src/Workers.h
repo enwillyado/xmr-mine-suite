@@ -28,7 +28,7 @@ public:
 	};
 	struct WorkerData
 	{
-		WorkerData() : size(0), isDonate(false)
+		WorkerData() : size(1), isDonate(false)
 		{
 		}
 		int size;
@@ -45,7 +45,15 @@ public:
 	void complete(const Worker & worker);
 	void remove(const Worker & worker);
 	
-	const WorkerData & getWorkerData(const Worker & worker) const;
+	inline WorkerData & getWorkerData(const Worker & worker)
+	{
+		return workersMap[worker];
+	}
+	
+	inline const WorkersMap & get() const
+	{
+		return workersMap;
+	}
 	
 	inline size_t size() const
 	{

@@ -25,7 +25,11 @@
 #include <map>
 #include <iterator>
 
-#include <pthread.h>     /* pthread functions and data structures */
+#include <unistd.h>
+#include <termios.h>
+#include <ctype.h>
+
+#include <pthread.h>
 
 static std::vector<std::string> Split(const std::string & s, char delim)
 {
@@ -360,9 +364,39 @@ public:
 	}
 };
 
+char getch()
+{
+        char buf = 0;
+        struct termios old = {0};
+        if (tcgetattr(0, &old) < 0)
+		{
+                perror("tcsetattr()");
+		}
+        old.c_lflag &= ~ICANON;
+        old.c_lflag &= ~ECHO;
+        old.c_cc[VMIN] = 1;
+        old.c_cc[VTIME] = 0;
+        if (tcsetattr(0, TCSANOW, &old) < 0)
+		{
+                perror("tcsetattr ICANON");
+		}
+        if (read(0, &buf, 1) < 0)
+		{
+                perror ("read()");
+		}
+        old.c_lflag |= ICANON;
+        old.c_lflag |= ECHO;
+        if (tcsetattr(0, TCSADRAIN, &old) < 0)
+		{
+                perror ("tcsetattr ~ICANON");
+		}
+        return (buf);
+}
+
+template<typename Server>
 void* createServer(void* data)
 {
-	PrivateWorkers* server = static_cast<PrivateWorkers*>(data);
+	Server* server = static_cast<Server*>(data);
 	if(server != NULL)
 	{
 		server->start();
@@ -385,8 +419,9 @@ int Finder::Exec(const int workers_tcp_port,
 		return -1;
 	}
 	
+	// start tcp receive bucle and echo reply in thread
     pthread_t server_p_thread;
-    int server_thr_id = pthread_create(&server_p_thread, NULL, createServer, (void*)&workers_server);
+    int server_thr_id = pthread_create(&server_p_thread, NULL, &createServer<PrivateWorkers>, (void*)&workers_server);
 	if(server_thr_id < 0)
 	{
 		std::cerr << "Fail to start workers_server" << std::endl;
@@ -395,17 +430,68 @@ int Finder::Exec(const int workers_tcp_port,
 		
 	// Create client
 	//
-	PrivateFinder & c = PrivateFinder::GetInstance();
+	PrivateFinder & finder_client = PrivateFinder::GetInstance();
 
 	//connect to server
-	c.conn(serverhost, serverport);
+	finder_client.conn(serverhost, serverport);
 	
 	// login on server
-	c.login(user, pass, agent);
+	finder_client.login(user, pass, agent);
 
-	// start receive bucle and echo reply
-	c.start();
+	// start tcp receive bucle and nonce reply in thread
+    pthread_t client_p_thread;
+    int client_thr_id = pthread_create(&client_p_thread, NULL, &createServer<PrivateFinder>, (void*)&finder_client);
+	if(client_thr_id < 0)
+	{
+		std::cerr << "Fail to start finder_client" << std::endl;
+		return -1;
+	}
+	
+	std::cout << APP_PRENOM << " started!" << std::endl;
 
+	bool exit = true;
+	do
+	{
+		std::cout << APP_PRENOM << "Menu" << (exit ? " (press 'h' to get help!)" : "") << ":" << std::endl;
+		exit = false;
+		
+		const char c = getch();
+		switch(c)
+		{
+			case 'q':
+				exit = true;
+				break;
+				
+			case 'h':
+					std::cout << "- 'q': quit server." << std::endl;
+					std::cout << "- 'h': get this help." << std::endl;
+					std::cout << "- 'l': list all workers." << std::endl;
+				break;
+				
+			case 'l':
+			{
+				size_t id = 0;
+				const Workers::WorkersMap & workersMap = Workers::GetInstance().get();
+				std::cout << "=== List all workers (" << workersMap.size() << ") ===" << std::endl;
+				for (Workers::WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
+				{
+					const bool normal = (id++ % 100 < (100 - DONATE_RATIO - 1));
+					std::cout << (normal ? "-" : "~") << (it->second.isDonate ? "-" : "~") << " " << 
+								  it->first.ip << "/" << it->first.port << ": " << 
+								  it->second.size << std::endl;
+				}
+			}
+				break;
+				
+			default:
+					std::cout << "'" << (isprint(c) ? (char)c : (int)c) << "' is not a valid option." << std::endl;
+				break;
+		}
+	}
+	while(false == exit);
+
+	std::cout << "Quitting..." << std::endl;
+	
 	//done
 	return 0;
 }

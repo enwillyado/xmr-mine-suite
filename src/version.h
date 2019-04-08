@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#ifndef XMRIG_NO_SSL
+#ifdef APP_SSL
 #define APP_SSL_STR   "-SSL"
 #else
 #define APP_SSL_STR   "-noSSL"
@@ -55,9 +55,10 @@
 
 #define DONATE_RATIO   10
 
-#define APP_ID        "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
-#define APP_NAME      "XMR-eWa" APP_SSL_STR APP_DEBUG_STR
-#define APP_DESC      "XMR-eWa suite: CPU version " APP_SSL_STR APP_DEBUG_STR
+#define APP_PRENOM    "XMR-eWa"
+#define APP_ID        APP_PRENOM APP_SSL_STR APP_DEBUG_STR
+#define APP_NAME      APP_PRENOM APP_SSL_STR APP_DEBUG_STR
+#define APP_DESC      APP_PRENOM " suite: CPU version " APP_SSL_STR APP_DEBUG_STR
 #define APP_VERSION   "0.0.1-1"
 #define APP_DOMAIN    "enWILLYado.com"
 #define APP_SITE      "www.enWILLYado.com"

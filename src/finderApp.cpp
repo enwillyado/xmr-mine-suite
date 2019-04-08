@@ -9,7 +9,12 @@
 
 #include "version.h"
 
+#include <signal.h>
 #include <stdlib.h>
+
+void my_handler(int s)
+{
+}
 
 std::string getString(const char* str, std::string def)
 {
@@ -22,6 +27,14 @@ std::string getString(const char* str, std::string def)
 
 int main(int argc, char** argv)
 {
+	struct sigaction sigIntHandler;
+
+	sigIntHandler.sa_handler = my_handler;
+	sigemptyset(&sigIntHandler.sa_mask);
+	sigIntHandler.sa_flags = 0;
+
+	sigaction(SIGINT, &sigIntHandler, NULL);
+
 	// Params:
 	//
 	const int workersport = (argc > 1 ? atoi(argv[1]) : DEFAULT_WORKERS_PORT);
