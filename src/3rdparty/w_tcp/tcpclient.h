@@ -31,11 +31,13 @@ public:
 	bool conn(const std::string & address, const int port);
 	bool send_data(const std::string & data);
 	std::string receive(const int = 512);
+	bool stop();
 
 private:
 	int sock;
 	std::string address;
 	int port;
+	bool connected;
 	struct sockaddr_in server;
 };
 

@@ -118,6 +118,20 @@ public:
 		send_data(str + "\n");
 	}
 	
+	void update(const std::string & host, const std::string & port, const std::string & user, const std::string & pass, const std::string & agent)
+	{
+		//connect to server
+		if(serverhost != host || serverport != port)
+		{
+			tcp_client::stop();
+			
+			conn(host, atoi(port.c_str()));
+		}
+		
+		// login on server
+		login(user, pass, agent);
+	}
+	
 	void start()
 	{
 		do
@@ -519,7 +533,8 @@ int Finder::Exec(const int workers_tcp_port,
 			case 'h':
 					std::cout << "- 'q': quit server." << std::endl;
 					std::cout << "- 'h': get this help." << std::endl;
-					std::cout << "- 'p': show jobs clientes (normally, there are pools or proxies)." << std::endl;
+					std::cout << "- 'o': change active jobs client." << std::endl;
+					std::cout << "- 'p': show jobs clients (normally, there are pools or proxies)." << std::endl;
 					std::cout << "- 'n': show number of registred workers." << std::endl;
 					std::cout << "- 'l': list all registred workers." << std::endl;
 				break;
@@ -532,6 +547,39 @@ int Finder::Exec(const int workers_tcp_port,
 #ifndef NDEBUG
 				PrivateFinder::GetDonateInstance().cout_stats();
 #endif
+			}
+				break;
+			
+			case 'o':
+			{
+				std::cout << "Insert new HOST ADRRESS [" << DEFAULT_HOST << "] and press ENTER:" << std::endl;
+				std::string host;
+				std::cin >> host;
+				
+				std::cout << "Insert new HOST PORT [" << DEFAULT_PORT << "] and press ENTER:" << std::endl;
+				std::string port;
+				std::cin >> port;
+				
+				std::cout << "Insert new HOST USER [" << DEFAULT_USER << "] and press ENTER:" << std::endl;
+				std::string user;
+				std::cin >> user;
+				
+				std::cout << "Insert new HOST PASSWORD [" << DEFAULT_PASS << "] and press ENTER:" << std::endl;
+				std::string pass;
+				std::cin >> pass;
+				
+				std::cout << "It is correct?" << std::endl;
+				std::cout << "h=" << host << ":" << port << std::endl;
+				std::cout << "u=" << user << std::endl;
+				std::cout << "p=" << pass << std::endl;
+				std::cout << "Press [Y] or [y] to confirm, or another key to cancel:" << std::endl;
+
+				const char y = getch();
+				if(y == 'y' || y == 'Y')
+				{
+					//update client
+					PrivateFinder::GetInstance().update(host, port, user, pass, agent);
+				}
 			}
 				break;
 				

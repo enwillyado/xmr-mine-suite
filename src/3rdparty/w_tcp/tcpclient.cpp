@@ -25,6 +25,11 @@
 
 #include <iostream>
 
+#include <stdio.h>
+#include <string.h>		//strlen
+#include <sys/socket.h>
+#include <arpa/inet.h>	//inet_addr
+#include <unistd.h>		//write
 
 int create()
 {
@@ -52,6 +57,7 @@ tcp_client::tcp_client()
 	sock = -1;
 	port = 0;
 	address = "";
+	connected = false;
 }
 
 /**
@@ -66,7 +72,7 @@ bool tcp_client::conn(const std::string & address, const int port)
 		sock = socket(AF_INET, SOCK_STREAM, 0);
 		if(sock == -1)
 		{
-			perror("Could not create socket. Error: ");
+			perror("Could not create socket");
 		}
 
 	}
@@ -81,7 +87,7 @@ bool tcp_client::conn(const std::string & address, const int port)
 		if((he = gethostbyname(address.c_str())) == NULL)
 		{
 			//gethostbyname failed
-			std::cerr << "Failed to resolve hostname\n";
+			perror("Failed to resolve hostname");
 
 			return false;
 		}
@@ -114,7 +120,8 @@ bool tcp_client::conn(const std::string & address, const int port)
 	//Connect to remote server
 	if(connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0)
 	{
-		perror("connect failed. Error: ");
+		perror("Connect failed");
+		connected = true;
 		return 1;
 	}
 
@@ -130,7 +137,7 @@ bool tcp_client::send_data(const std::string & data)
 	int i;
 	if((i = send(sock, data.c_str(), strlen(data.c_str()), 0)) < 0)
 	{
-		perror("Send failed. Error: ");
+		perror("Send failed");
 		return false;
 	}
 
@@ -142,17 +149,43 @@ bool tcp_client::send_data(const std::string & data)
 */
 std::string tcp_client::receive(const int size)
 {
-	char* buffer = new char[size];
 	std::string reply;
-
-	//Receive a reply from the server
-	int i;
-	if((i = recv(sock, buffer, size, 0)) < 0)
+	if(sock != -1)
 	{
-		std::cerr << "recv failed" << std::endl;
-	}
+		char* buffer = new char[size];
 
-	reply = std::string(buffer, i);
-	delete [] buffer;
+		//Receive a reply from the server
+		const int i = recv(sock, buffer, size, 0);
+		if(i > 0)
+		{
+			reply = std::string(buffer, i);
+		}
+		else if(i < 0)
+		{
+			if(connected)
+			{
+				perror("Recv failed");
+			}
+			sleep(1);
+		}
+
+		delete [] buffer;
+	}
 	return reply;
+}
+
+bool tcp_client::stop()
+{
+	connected = false;
+	
+	if (sock == -1)
+	{
+		return false;
+	}
+	
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
+	sock = -1;
+	
+	return true;
 }
