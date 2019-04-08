@@ -46,7 +46,7 @@ class PrivateFinder : public tcp_client
 		PrivateFinder* client = static_cast<PrivateFinder*>(data);
 		if(client != NULL)
 		{
-			client->receive();
+			client->start();
 		}
 		return data;
 	}
@@ -99,6 +99,15 @@ public:
 		
 		//send some data
 		send_data(str + "\n");
+	}
+	
+	void start()
+	{
+		do
+		{
+			receive();
+		}
+		while(true);
 	}
 	
 	void receive()
@@ -164,8 +173,6 @@ public:
 		{
 			Workers::GetInstance().broadcast(job(), this != &GetInstance());
 		}
-		
-		receive();
 	}
 	
 	void sendNonce(const std::string & nonce, const std::string & result)
@@ -396,8 +403,8 @@ int Finder::Exec(const int workers_tcp_port,
 	// login on server
 	c.login(user, pass, agent);
 
-	//receive bucle and echo reply
-	c.receive();
+	// start receive bucle and echo reply
+	c.start();
 
 	//done
 	return 0;

@@ -90,7 +90,7 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 #endif
 }
 
-void  Workers::add(const Worker & worker)
+void Workers::add(const Worker & worker)
 {
 	workersMap[worker] = WorkerData();
 	workersMap[worker].size = 1;
@@ -104,7 +104,7 @@ void Workers::remove(const Worker & worker)
 	workersMap.erase(worker);
 }
 
-Workers::WorkerData & Workers::getWorkerData(const Worker & worker)
+const Workers::WorkerData & Workers::getWorkerData(const Worker & worker) const
 {
 	return workersMap[worker];
 }

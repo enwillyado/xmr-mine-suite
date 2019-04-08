@@ -42,7 +42,7 @@ public:
 	void complete(const Worker & worker);
 	void remove(const Worker & worker);
 	
-	WorkerData & getWorkerData(const Worker & worker);
+	const WorkerData & getWorkerData(const Worker & worker) const;
 	
 	inline size_t size() const
 	{
