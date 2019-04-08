@@ -20,11 +20,13 @@ extern "C"
 	#define static_assert
 	#endif
 
+	#include "crypto/c_keccak.h"
 	#include "crypto/c_groestl.h"
 	#include "crypto/c_blake256.h"
 	#include "crypto/c_jh.h"
 	#include "crypto/c_skein.h"
 	#include "crypto/int-util.h"
+	//#include "crypto/hash-ops.h"
 
 	#if USE_INT128
 
@@ -68,6 +70,11 @@ extern "C"
 	#   include <intrin.h>
 	#   define __restrict__ __restrict
 	#endif
+
+	#include "crypto/c_groestl.h"
+	#include "crypto/c_blake256.h"
+	#include "crypto/c_jh.h"
+	#include "crypto/c_skein.h"
 
 	struct cryptonight_ctx;
 	typedef void(*cn_mainloop_fun_ms_abi)(cryptonight_ctx*) ABI_ATTRIBUTE;
