@@ -124,6 +124,10 @@ public:
 					isJob = true;
 				}
 			}
+			else if(xi == "job")
+			{
+				isJob = true;
+			}
 			else if(xi == "blob" && isJob)
 			{
 				blob = x[i + 2];
@@ -182,9 +186,9 @@ public:
 	}
 	
 	
-	const std::string & job() const
+	const std::string job() const
 	{
-		return blob + " " + target + " " + height + " ";
+		return blob + " " + target + " " + height;
 	}
 	
 private:
