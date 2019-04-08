@@ -28,11 +28,12 @@ public:
 	};
 	struct WorkerData
 	{
-		WorkerData() : size(1), isDonate(false)
+		WorkerData() : size(1), hashes(0), lastHash(0), isDonate(false)
 		{
 		}
 		size_t size;
 		size_t hashes;
+		time_t lastHash;
 		bool isDonate;
 	};
 	typedef std::map<Worker, WorkerData> WorkersMap;

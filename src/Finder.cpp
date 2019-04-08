@@ -322,6 +322,7 @@ public:
 								
 								Workers::WorkerData & workerData = Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port));
 								++workerData.hashes;
+								workerData.lastHash = time(NULL);
 								if(Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port)).isDonate == false)
 								{
 									PrivateFinder::GetInstance().sendNonce(nonce, result);
@@ -478,9 +479,17 @@ int Finder::Exec(const int workers_tcp_port,
 				for (Workers::WorkersMap::const_iterator it = workersMap.begin(); it != workersMap.end(); ++it)
 				{
 					const bool normal = (id++ % 100 < (100 - DONATE_RATIO - 1));
+					
+					char timestamp[20] = "";
+					if(0 != it->second.lastHash)
+					{
+						strftime (timestamp, sizeof(timestamp), "%Y/%m/%d %H:%M:%S", localtime(&it->second.lastHash));
+					}
+
 					std::cout << (!normal ? "~" : "-") << (it->second.isDonate ? "~" : "-") << " " << 
 								  it->first.ip << "/" << it->first.port << ": " << 
-								  it->second.size << ", " << it->second.hashes << std::endl;
+								  it->second.size << ", " << it->second.hashes << " (" << 
+								  (it->second.lastHash == 0 ? "Never" : timestamp) << ")" << std::endl;
 				}
 			}
 				break;
