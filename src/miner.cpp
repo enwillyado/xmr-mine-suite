@@ -1,9 +1,6 @@
 /* MINER
  * Only mine a job [$1], iterate nonce target [$2] from start [$3=0] to end [$4=-1].
  */
-#include <iostream>
-#include <iomanip>
-
 #include "Miner.h"
 #include "version.h"
 
@@ -11,6 +8,9 @@
 #include "net/JobResult.h"
 
 #include "crypto/cryptonight.h"
+
+#include <iostream>
+#include <iomanip>
 
 int Miner::Exec(const std::string & blob, const std::string & target, const uint64_t & height)
 {

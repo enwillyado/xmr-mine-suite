@@ -45,6 +45,9 @@
     <ClCompile Include="..\src\crypto\c_jh.c">
       <Filter>Archivos de código fuente\crypto</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\crypto\c_keccak.c">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\crypto\c_skein.c">
       <Filter>Archivos de código fuente\crypto</Filter>
     </ClCompile>
@@ -94,6 +97,9 @@
       <Filter>Archivos de encabezado\crypto</Filter>
     </ClInclude>
     <ClInclude Include="..\src\crypto\c_jh.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\c_keccak.h">
       <Filter>Archivos de encabezado\crypto</Filter>
     </ClInclude>
     <ClInclude Include="..\src\crypto\c_skein.h">

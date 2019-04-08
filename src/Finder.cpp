@@ -185,6 +185,7 @@ public:
 		tcp_client::send_data(str + "\n");
 	}
 	
+	
 	const std::string job() const
 	{
 		return blob + " " + target + " " + height;
@@ -235,11 +236,10 @@ public:
 						
 #ifndef NDEBUG
 						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " @ " << client_sock_ip << " / " << port << " : " << xi1 << std::endl;
+						std::cout << client_sock << " @ " << client_sock_ip << " : port : " << port << std::endl;
 						std::cout << "------------------------" << std::endl;
 #endif
-
-						Workers::GetInstance().add(Workers::Worker(client_sock_ip, port));
+						Workers::GetInstance().add(client_sock_ip, port);
 						
 						http_response_message = "Receive start, welcome!";
 						
@@ -255,37 +255,25 @@ public:
 				}
 				else if(xi1 == "end")
 				{
-					const std::string & xi2 = x[i + 2];
-					if(xi2 == "port")
-					{
-						const std::string & port = x[i + 3];
-						
 #ifndef NDEBUG
-						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " @ " << client_sock_ip << " / " << port << " : " << xi1 << std::endl;
-						std::cout << "------------------------" << std::endl;
+					std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+					std::cout << client_sock << " @ " << client_sock_ip << " : end" << std::endl;
+					std::cout << "------------------------" << std::endl;
 #endif
-						Workers::GetInstance().remove(Workers::Worker(client_sock_ip, port));
-							
-						http_response_message = "Receive end, bye!";
-					}
+					Workers::GetInstance().remove(client_sock_ip);
+						
+					http_response_message = "Receive end, bye!";
 				}
 				else if(xi1 == "complete")
 				{
-					const std::string & xi2 = x[i + 2];
-					if(xi2 == "port")
-					{
-						const std::string & port = x[i + 3];
-						
 #ifndef NDEBUG
-						std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-						std::cout << client_sock << " @ " << client_sock_ip << " / " << port << " : " << xi1 << std::endl;
-						std::cout << "------------------------" << std::endl;
+					std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+					std::cout << client_sock << " @ " << client_sock_ip << " : complete" << std::endl;
+					std::cout << "------------------------" << std::endl;
 #endif
-						Workers::GetInstance().complete(Workers::Worker(client_sock_ip, port));
+					Workers::GetInstance().complete(client_sock_ip);
 						
-						http_response_message = "Receive complete, great!";
-					}
+					http_response_message = "Receive complete, great!";
 				}
 				else if(xi1 == "nonce")
 				{
@@ -299,27 +287,15 @@ public:
 						{
 							const std::string & result = x[i + 5];
 							
-							const std::string & xi6 = x[i + 6];
-							if(xi6 == "port")
-							{
-								const std::string & port = x[i + 7];
 #ifndef NDEBUG
-								std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
-								std::cout << client_sock << " @ " << client_sock_ip << " / " << port << " : nonce : " << nonce << " : result " << result << std::endl;
-								std::cout << "------------------------" << std::endl;
+							std::cout << "-[[[[[[[[[[[[[[[[[[[[[[[" << std::endl;
+							std::cout << client_sock << " @ " << client_sock_ip << " : nonce : " << nonce << " : result " << result << std::endl;
+							std::cout << "------------------------" << std::endl;
 #endif
-								
-								if(Workers::GetInstance().getWorkerData(Workers::Worker(client_sock_ip, port)).isDonate == false)
-								{
-									PrivateFinder::GetInstance().sendNonce(nonce, result);
-								}
-								else
-								{
-									PrivateFinder::GetDonateInstance().sendNonce(nonce, result);
-								}
-								
-								http_response_message = "Receive nonce, thnks!";
-							}
+							
+							PrivateFinder::GetInstance().sendNonce(nonce, result);
+							
+							http_response_message = "Receive nonce, thnks!";
 						}
 					}
 				}
