@@ -81,6 +81,14 @@ bool tcp_server::create(const int port)
 	return true;
 }
 
+// get sockaddr, IPv4 or IPv6:
+void inline *get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET)
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
 void tcp_server::start()
 {
 	int client_sock , c , read_size;
@@ -105,9 +113,7 @@ void tcp_server::start()
 
 		char client_sock_ip[INET6_ADDRSTRLEN + 1];
 		memset(client_sock_ip, '\0', sizeof(client_sock_ip));
-		inet_ntop(clientadd->sa_family,
-				  clientadd->sa_family == AF_INET ? client->sin_addr : client->sin6_addr,
-				  client_sock_ip, INET6_ADDRSTRLEN);
+		inet_ntop(clientadd->sa_family, get_in_addr(clientadd), client_sock_ip, INET6_ADDRSTRLEN);
 
 		//Receive a message from client
 		read_size = recv(client_sock , client_message, 2048, 0);
