@@ -19,6 +19,7 @@ Workers & Workers::GetInstance()
 
 void Workers::broadcast(const std::string & job, const bool isDonate)
 {
+#ifndef NDEBUG
 	if(isDonate)
 	{
 		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
@@ -29,6 +30,7 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 	}
 
 	std::cout << job << std::endl;
+#endif
 	
 	size_t ini = 0;
 	if(workersMap.size() > 0)
@@ -54,7 +56,9 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 			if((normal && !isDonate) || (!normal && isDonate)) // normal == isDonate
 			{
 				const std::string seek = toStr(ini) + " " + toStr(ini + steep);
+#ifndef NDEBUG
 				std::cout << it->first << " : " << seek << std::endl;
+#endif
 				
 				const std::string packet = job + " " + seek;
 				
@@ -70,6 +74,7 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 		}
 	}
 	
+#ifndef NDEBUG
 	if(isDonate)
 	{
 		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
@@ -78,6 +83,7 @@ void Workers::broadcast(const std::string & job, const bool isDonate)
 	{
 		std::cout << "------------------------" << std::endl;
 	}
+#endif
 }
 
 void  Workers::add(const Worker & worker, const Port & port)

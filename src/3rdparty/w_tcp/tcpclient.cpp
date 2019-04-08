@@ -94,7 +94,9 @@ bool tcp_client::conn(const std::string & address, const int port)
 			//strcpy(ip , inet_ntoa(*addr_list[i]) );
 			server.sin_addr = *addr_list[i];
 
-			std::cerr << address << " resolved to " << inet_ntoa(*addr_list[i]) << std::endl;
+#ifndef NDEBUG
+			std::cout << address << " resolved to " << inet_ntoa(*addr_list[i]) << std::endl;
+#endif
 
 			break;
 		}
