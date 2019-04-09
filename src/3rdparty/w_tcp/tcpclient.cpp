@@ -62,38 +62,36 @@ tcp_client::tcp_client()
 
 std::string resolve_address(const std::string & address)
 {
-	//setup address structure
-	if(inet_addr(address.c_str()) == INADDR_NONE)
+	struct addrinfo * addr_info;
+	char client_sock_ip[INET6_ADDRSTRLEN];
+	memset(client_sock_ip, '\0', sizeof(client_sock_ip));
+	int errcode = getaddrinfo(address.c_str(), NULL, NULL, &addr_info);
+	if(errcode != 0)
 	{
-		struct hostent* he;
-		struct in_addr** addr_list;
-
-		//resolve the hostname, its not an ip address
-		if((he = gethostbyname(address.c_str())) == NULL)
-		{
-			//gethostbyname failed
-			perror("Failed to resolve hostname");
-
-			return "";
-		}
-
-		//Cast the h_addr_list to in_addr , since h_addr_list also has the ip address in long format only
-		addr_list = (struct in_addr**) he->h_addr_list;
-
-		for(int i = 0; addr_list[i] != NULL; i++)
-		{
-#ifndef NDEBUG
-			std::cout << address << " resolved to " << inet_ntoa(*addr_list[i]) << std::endl;
-#endif
-
-			return inet_ntoa(*addr_list[i]);
-		}
-		
-		return "";
+		perror("fail to get address info");
 	}
-
+	else
+	{
+		for(struct addrinfo * res = addr_info; res != NULL; res = res->ai_next)
+		{
+			if(res->ai_family == AF_INET)
+			{
+				if(NULL == inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, client_sock_ip, sizeof(client_sock_ip)))
+				{
+					perror("inet_ntop");
+				}
+				else
+				{
+#ifndef NDEBUG
+					std::cout << address << " resolved to " << client_sock_ip << std::endl;
+#endif
+				}
+			}
+		}
+	}
+	
 	//plain ip address
-	return address;
+	return client_sock_ip;
 }
 
 #include <map>
