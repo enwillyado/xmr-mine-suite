@@ -25,6 +25,12 @@
     <Filter Include="Archivos de encabezado\w_tcp">
       <UniqueIdentifier>{7ebc6113-9bfe-4486-96cd-ec80d4f8335c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de código fuente\w_udp">
+      <UniqueIdentifier>{7e84b083-8942-418c-89b3-ed8e9541887b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\w_udp">
+      <UniqueIdentifier>{14d1167c-2244-4218-96f9-ed7eb707fe57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_comun.cpp">
@@ -41,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="..\src\3rdparty\w_tcp\tcpserver.cpp">
       <Filter>Archivos de código fuente\w_tcp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdparty\w_udp\udpclient.cpp">
+      <Filter>Archivos de código fuente\w_udp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\src\3rdparty\w_tcp\tcpserver.h">
       <Filter>Archivos de encabezado\w_tcp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\3rdparty\w_udp\udpclient.h">
+      <Filter>Archivos de encabezado\w_udp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

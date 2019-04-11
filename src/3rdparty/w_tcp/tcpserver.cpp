@@ -12,6 +12,24 @@
 #include <unistd.h>		//write
 #endif
 
+static bool InitialisingWSA()
+{
+#ifdef _WINSOCKAPI_
+	WSADATA wsaData;
+	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		perror("Initialising Winsock failed");
+		return false;
+	}
+#endif
+	return true;
+};
+
+tcp_server::tcp_server()
+{
+	static const bool c = InitialisingWSA();
+}
+
 void tcp_server::getMessage(const int client_sock, const std::string & client_sock_ip,
                             const std::string & client_message)
 {
@@ -42,26 +60,6 @@ void tcp_server::disconectClient(const int client_sock)
 	close(client_sock);
 #else
 	closesocket(socket_desc);
-#endif
-}
-
-#ifndef __GNUC__
-static WSADATA & InitializeWSA()
-{
-	// Initialize Winsock
-	static WSADATA wsaData;
-	if(0 != WSAStartup(MAKEWORD(2, 2), &wsaData))
-	{
-		perror("WSAStartup failed with error");
-	}
-	return wsaData;
-}
-#endif
-
-tcp_server::tcp_server()
-{
-#ifndef __GNUC__
-	static WSADATA wsaData = InitializeWSA();
 #endif
 }
 

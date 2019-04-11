@@ -5,6 +5,8 @@
 #include "Workers.h"
 #include "version.h"
 
+#include "3rdparty/w_udp/udpclient.h"
+
 #include <iostream>
 #include <map>
 #include <iterator>
@@ -94,7 +96,11 @@ void Workers::broadcastToFromTo(const Worker & worker, const std::string & job, 
 
 	const std::string packet = job + " " + seek;
 
+#ifdef __GNUC__
 	if(system((std::string("./udp_send.sh '" + worker.ip + "/" + worker.port + "' '") + packet + "'").c_str()))
+#else
+	if(false == udp_client::send(worker.ip, atoi(worker.port.c_str()), packet))
+#endif
 	{
 		std::cerr << "Fail to send job to worker: " << worker.ip + "/" + worker.port << std::endl;
 	}

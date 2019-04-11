@@ -28,29 +28,23 @@
 #include <stdio.h>
 #include <string.h>		//strlen
 
-int create()
+static bool InitialisingWSA()
 {
 #ifdef _WINSOCKAPI_
-	// Initialize Winsock
 	WSADATA wsaData;
-	int  iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if(iResult != 0)
+	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
-		printf("WSAStartup failed with error: %d\n", iResult);
-		return 1;
+		perror("Initialising Winsock failed");
+		return false;
 	}
 #endif
-
-	return 0;
+	return true;
 };
 
 tcp_client::tcp_client()
 {
-	static const int c = create();
-	if(c != 0)
-	{
-		return;
-	}
+	static const bool c = InitialisingWSA();
+
 	sock = -1;
 	port = 0;
 	address = "";

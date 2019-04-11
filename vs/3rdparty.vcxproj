@@ -32,6 +32,7 @@
     <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_win.cpp" />
     <ClCompile Include="..\src\3rdparty\w_tcp\tcpclient.cpp" />
     <ClCompile Include="..\src\3rdparty\w_tcp\tcpserver.cpp" />
+    <ClCompile Include="..\src\3rdparty\w_udp\udpclient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\3rdparty\align.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="..\src\3rdparty\w_sistema\w_sistema_thread.h" />
     <ClInclude Include="..\src\3rdparty\w_tcp\tcpclient.h" />
     <ClInclude Include="..\src\3rdparty\w_tcp\tcpserver.h" />
+    <ClInclude Include="..\src\3rdparty\w_udp\udpclient.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>3rdparty</ProjectName>
