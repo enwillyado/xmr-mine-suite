@@ -15,7 +15,7 @@
 static bool InitialisingWSA()
 {
 #ifdef _WINSOCKAPI_
-	WSADATA wsaData;
+	static WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
 		perror("Initialising Winsock failed");
@@ -59,7 +59,7 @@ void tcp_server::disconectClient(const int client_sock)
 #ifdef __GNUC__
 	close(client_sock);
 #else
-	closesocket(socket_desc);
+	closesocket(client_sock);
 #endif
 }
 
@@ -143,7 +143,7 @@ void tcp_server::start()
 		if(client_sock < 0)
 		{
 			perror("accept failed");
-			return;
+			continue;
 		}
 #ifndef NDEBUG
 		puts("Connection accepted");
@@ -171,6 +171,7 @@ void tcp_server::start()
 		else if(read_size == -1)
 		{
 			perror("recv failed");
+			continue;
 		}
 	}
 

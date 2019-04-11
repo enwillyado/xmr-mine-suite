@@ -16,7 +16,7 @@
 static bool InitialisingWSA()
 {
 #ifdef _WINSOCKAPI_
-	WSADATA wsaData;
+	static WSADATA wsaData;
 	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
 	{
 		perror("Initialising Winsock failed");
