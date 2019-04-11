@@ -5,7 +5,6 @@
 #include <iomanip>
 
 #include "Miner.h"
-#include "version.h"
 
 #include "net/Job.h"
 #include "net/JobResult.h"
@@ -18,16 +17,16 @@ int Miner::Exec(const std::string & blob, const std::string & target, const uint
 }
 
 int Miner::Exec(const std::string & blob, const std::string & target, const uint64_t & height,
-				const OnNonce onNonce, const uint32_t & ini, const uint32_t & end)
+                const OnNonce onNonce, const uint32_t & ini, const uint32_t & end)
 {
 #ifndef NDEBUG
 	CryptoNight::selfTest();
 #endif
-	
+
 	// Create and set job
 	//
 	Job job;
-	
+
 	if(!job.setBlob(blob.c_str()))
 	{
 		std::cerr << "Blob fail" << std::endl;
@@ -48,7 +47,7 @@ int Miner::Exec(const std::string & blob, const std::string & target, const uint
 
 	struct cryptonight_ctx ctx0, ctx1;
 	struct cryptonight_ctx* ctx[2] = {&ctx0, &ctx1};
-	
+
 	// Create result from job
 	//
 	JobResult result(job);
@@ -58,7 +57,8 @@ int Miner::Exec(const std::string & blob, const std::string & target, const uint
 	uint32_t & actual = *job.nonce();
 	actual = ini;
 
-	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ":" << (int)job.variant() << ";" << std::endl;
+	std::cout << "S:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ":" <<
+	          (int)job.variant() << ";" << std::endl;
 	while(actual <= end)
 	{
 		if(CryptoNight::hash(job, result, ctx))
@@ -73,8 +73,9 @@ int Miner::Exec(const std::string & blob, const std::string & target, const uint
 			}
 		}
 
-#ifdef NDEBUG
 		if(0 == (++(*job.nonce()) % 0x100))
+#ifndef NDEBUG
+			;
 #endif
 		{
 			std::cout << "X:" << std::hex << std::setw(8) << std::setfill('0') << *job.nonce() << ";" << std::endl;

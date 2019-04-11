@@ -27,32 +27,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\crypto\CryptoNight.cpp" />
+    <ClCompile Include="..\src\crypto\cryptonight.cpp" />
+    <ClCompile Include="..\src\crypto\cryptonight_v.cpp" />
     <ClCompile Include="..\src\crypto\c_blake256.c" />
     <ClCompile Include="..\src\crypto\c_groestl.c" />
     <ClCompile Include="..\src\crypto\c_jh.c" />
     <ClCompile Include="..\src\crypto\c_keccak.c" />
     <ClCompile Include="..\src\crypto\c_skein.c" />
-    <ClCompile Include="..\src\Mem.cpp" />
-    <ClCompile Include="..\src\Mem_unix.cpp" />
-    <ClCompile Include="..\src\Mem_win.cpp" />
     <ClCompile Include="..\src\Miner.cpp" />
     <ClCompile Include="..\src\net\Job.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\res\app.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\res\app.ico" />
-    <None Include="..\src\config.json">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\crypto\CryptoNight.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_arm.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_test.h" />
-    <ClInclude Include="..\src\crypto\CryptoNight_x86.h" />
+    <ClInclude Include="..\src\crypto\cryptonight.h" />
+    <ClInclude Include="..\src\crypto\cryptonightR_template.h" />
+    <ClInclude Include="..\src\crypto\cryptonight_test.h" />
+    <ClInclude Include="..\src\crypto\cryptonight_v.h" />
+    <ClInclude Include="..\src\crypto\cryptonight_variant4_random_math.h" />
     <ClInclude Include="..\src\crypto\c_blake256.h" />
     <ClInclude Include="..\src\crypto\c_groestl.h" />
     <ClInclude Include="..\src\crypto\c_jh.h" />
@@ -60,12 +50,11 @@
     <ClInclude Include="..\src\crypto\c_skein.h" />
     <ClInclude Include="..\src\crypto\groestl_tables.h" />
     <ClInclude Include="..\src\crypto\hash.h" />
+    <ClInclude Include="..\src\crypto\int-util.h" />
     <ClInclude Include="..\src\crypto\skein_port.h" />
     <ClInclude Include="..\src\crypto\soft_aes.h" />
     <ClInclude Include="..\src\crypto\SSE2NEON.h" />
-    <ClInclude Include="..\src\Mem.h" />
     <ClInclude Include="..\src\Miner.h" />
-    <ClInclude Include="..\src\net\Id.h" />
     <ClInclude Include="..\src\net\Job.h" />
     <ClInclude Include="..\src\net\JobResult.h" />
     <ClInclude Include="..\src\version.h" />
@@ -137,7 +126,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-debug|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
       <Optimization>Disabled</Optimization>
@@ -159,7 +148,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -184,7 +173,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -212,7 +201,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <SmallerTypeCheck>true</SmallerTypeCheck>
@@ -241,7 +230,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -267,7 +256,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>

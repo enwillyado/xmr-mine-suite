@@ -6,7 +6,7 @@
 
 class Workers
 {
-public:	
+public:
 
 	typedef std::string Ip;
 	typedef std::string Port;
@@ -37,29 +37,29 @@ public:
 		bool isDonate;
 	};
 	typedef std::map<Worker, WorkerData> WorkersMap;
-	
+
 	WorkersMap workersMap;
-	
+
 	static Workers & GetInstance();
 
 	void broadcast(const std::string & job, const bool isDonate);
 	void broadcastTo(const Worker & worker, const std::string & job, const size_t ini, const size_t steep);
 	void broadcastToFromTo(const Worker & worker, const std::string & job, const size_t ini, const size_t fini);
-	
+
 	void add(const Worker & worker);
 	void complete(const Worker & worker);
 	void remove(const Worker & worker);
-	
+
 	inline WorkerData & getWorkerData(const Worker & worker)
 	{
 		return workersMap[worker];
 	}
-	
+
 	inline const WorkersMap & get() const
 	{
 		return workersMap;
 	}
-	
+
 	inline size_t size() const
 	{
 		return workersMap.size();

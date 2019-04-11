@@ -46,7 +46,7 @@ typedef struct                               /*  512-bit Skein hash context stru
 	union
 	{
 		u08b_t  b[SKEIN_512_BLOCK_BYTES];        /* partial block buffer (8-byte aligned) */
-		u64b_t  b64[SKEIN_512_BLOCK_BYTES/8];
+		u64b_t  b64[SKEIN_512_BLOCK_BYTES / 8];
 	};
 } Skein_512_Ctxt_t;
 

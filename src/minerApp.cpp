@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 	//
 	const std::string blob = getString(argc > 1 ? argv[1] : NULL, DEFAULT_BLOB);
 	const std::string target = getString(argc > 2 ? argv[2] : NULL, DEFAULT_TARGET);
-	
+
 	const uint64_t hight = argc > 3 ? atol(argv[3]) : DEFAULT_HIGHT;
 
 	return Miner::Exec(blob, target, hight);

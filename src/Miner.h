@@ -6,6 +6,8 @@
 
 #include <stdint.h>
 
+#include "version.h"
+
 class Miner
 {
 public:
@@ -13,5 +15,5 @@ public:
 
 	typedef void (*OnNonce)(const uint32_t & nonce, const uint8_t result[32]);
 	static int Exec(const std::string & blob, const std::string & target, const uint64_t & height,
-					const OnNonce onNonce, const uint32_t & ini, const uint32_t & end);
+	                const OnNonce onNonce, const uint32_t & ini = DEFAULT_INI, const uint32_t & end = DEFAULT_END);
 };

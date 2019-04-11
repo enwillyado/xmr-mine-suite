@@ -61,7 +61,7 @@ public:
 	bool setTarget(const char* target);
 	bool setHeight(const uint64_t height);
 	void setVariant(Variant variant);
-	
+
 	inline const uint32_t* nonce() const
 	{
 		return reinterpret_cast<const uint32_t*>(m_blob + 39);
@@ -70,12 +70,12 @@ public:
 	{
 		return m_blob;
 	}
-	
+
 	inline Variant variant() const
 	{
 		return (m_variant == VARIANT_AUTO ? (m_blob[0] >= 10) ? VARIANT_4  :
-											((m_blob[0] >= 8) ? VARIANT_2  : 
-															    VARIANT_1) : m_variant);
+		        ((m_blob[0] >= 8) ? VARIANT_2  :
+		         VARIANT_1) : m_variant);
 	}
 	inline size_t size() const
 	{

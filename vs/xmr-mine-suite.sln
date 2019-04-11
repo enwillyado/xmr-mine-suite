@@ -23,6 +23,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "all-in-one", "all-in-one.vc
 		{2F7A35B2-0B9E-43F4-8E6C-B24FE4A5B9D3} = {2F7A35B2-0B9E-43F4-8E6C-B24FE4A5B9D3}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "finderApp", "finderApp.vcxproj", "{79302C10-3E00-D3AC-9114-FAD53C704C96}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92BDBA37-96E3-4D85-B762-185E4407BB49} = {92BDBA37-96E3-4D85-B762-185E4407BB49}
+		{F7675A78-0D53-40C8-B4E0-1CB7E36FAE79} = {F7675A78-0D53-40C8-B4E0-1CB7E36FAE79}
+		{2F7A35B2-0B9E-43F4-8E6C-B24FE4A5B9D3} = {2F7A35B2-0B9E-43F4-8E6C-B24FE4A5B9D3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		vc-debug|Win32 = vc-debug|Win32
@@ -93,6 +100,18 @@ Global
 		{523C54C8-0AF5-B1EA-1FB5-EF4431962E35}.vc-releasex|Win32.Build.0 = vc-releasex|Win32
 		{523C54C8-0AF5-B1EA-1FB5-EF4431962E35}.vc-releasex|x64.ActiveCfg = vc-releasex|x64
 		{523C54C8-0AF5-B1EA-1FB5-EF4431962E35}.vc-releasex|x64.Build.0 = vc-releasex|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-debug|Win32.ActiveCfg = vc-debug|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-debug|Win32.Build.0 = vc-debug|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-debug|x64.ActiveCfg = vc-debug|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-debug|x64.Build.0 = vc-debug|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-release|Win32.ActiveCfg = vc-release|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-release|Win32.Build.0 = vc-release|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-release|x64.ActiveCfg = vc-release|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-release|x64.Build.0 = vc-release|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-releasex|Win32.ActiveCfg = vc-releasex|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-releasex|Win32.Build.0 = vc-releasex|Win32
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-releasex|x64.ActiveCfg = vc-releasex|x64
+		{79302C10-3E00-D3AC-9114-FAD53C704C96}.vc-releasex|x64.Build.0 = vc-releasex|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -24,18 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Mem.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Mem_unix.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Mem_win.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\crypto\CryptoNight.cpp">
-      <Filter>Archivos de código fuente\crypto</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\crypto\c_blake256.c">
       <Filter>Archivos de código fuente\crypto</Filter>
     </ClCompile>
@@ -57,38 +45,16 @@
     <ClCompile Include="..\src\Miner.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\crypto\cryptonight.cpp">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\crypto\cryptonight_v.cpp">
+      <Filter>Archivos de código fuente\crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\res\app.rc">
-      <Filter>Archivos de recursos</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\res\app.ico">
-      <Filter>Archivos de recursos</Filter>
-    </None>
-    <None Include="..\src\config.json">
-      <Filter>Archivos de recursos</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\Mem.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\version.h">
       <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\crypto\CryptoNight.h">
-      <Filter>Archivos de encabezado\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\crypto\CryptoNight_arm.h">
-      <Filter>Archivos de encabezado\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\crypto\CryptoNight_test.h">
-      <Filter>Archivos de encabezado\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\crypto\CryptoNight_x86.h">
-      <Filter>Archivos de encabezado\crypto</Filter>
     </ClInclude>
     <ClInclude Include="..\src\crypto\c_blake256.h">
       <Filter>Archivos de encabezado\crypto</Filter>
@@ -126,11 +92,26 @@
     <ClInclude Include="..\src\net\JobResult.h">
       <Filter>Archivos de encabezado\net</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\net\Id.h">
-      <Filter>Archivos de encabezado\net</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Miner.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\cryptonight.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\cryptonight_test.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\cryptonight_v.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\cryptonight_variant4_random_math.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\cryptonightR_template.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\crypto\int-util.h">
+      <Filter>Archivos de encabezado\crypto</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

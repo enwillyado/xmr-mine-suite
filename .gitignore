@@ -36,3 +36,5 @@
 /vs/*/
 *.opensdf
 *.sdf
+/build-mingw32
+/build-mingw64

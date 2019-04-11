@@ -8,67 +8,57 @@
 
 extern "C"
 {
-	#if defined(__arm__) || defined(_MSC_VER)
-	#ifndef NOASM
-	#define NOASM
-	#endif
-	#endif
+#if defined(__arm__) || defined(_MSC_VER)
+#ifndef NOASM
+#define NOASM
+#endif
+#endif
 
-	#if __GNUC__ <= 5 && __GNUC_MINOR__ <= 4
-	#define alignas(x)  
-	#define constexpr
-	#define static_assert
-	#endif
+#include "3rdparty/align.h"
 
-	#include "crypto/c_keccak.h"
-	#include "crypto/c_groestl.h"
-	#include "crypto/c_blake256.h"
-	#include "crypto/c_jh.h"
-	#include "crypto/c_skein.h"
-	#include "crypto/int-util.h"
+#if __GNUC__ <= 5 && __GNUC_MINOR__ <= 4
+#define constexpr
+#endif
 
-	#if USE_INT128
+#include "crypto/c_keccak.h"
+#include "crypto/c_groestl.h"
+#include "crypto/c_blake256.h"
+#include "crypto/c_jh.h"
+#include "crypto/c_skein.h"
 
-	#if __GNUC__ == 4 && __GNUC_MINOR__ >= 4 && __GNUC_MINOR__ < 6
-	typedef unsigned int uint128_t __attribute__ ((__mode__ (TI)));
-	#elif defined (_MSC_VER)
+#if USE_INT128
+
+#if __GNUC__ == 4 && __GNUC_MINOR__ >= 4 && __GNUC_MINOR__ < 6
+	typedef unsigned int uint128_t __attribute__((__mode__(TI)));
+#elif defined (_MSC_VER)
 	/* only for mingw64 on windows */
-	#undef  USE_INT128
-	#define USE_INT128 (0)
-	#else
+#undef  USE_INT128
+#define USE_INT128 (0)
+#else
 	typedef __uint128_t uint128_t;
-	#endif
+#endif
 
-	#endif
+#endif
 
-	#define LITE 0
-	#if LITE /* cryptonight-light */
-	#define MEMORY (1 << 20)
-	#define ITER   (1 << 19)
-	#else
-	#define MEMORY (1 << 21) /* 2 MiB */
-	#define ITER   (1 << 20)
-	#endif
+#define AES_BLOCK_SIZE  16
+#define AES_KEY_SIZE    32 /*16*/
+#define INIT_SIZE_BLK   8
+#define INIT_SIZE_BYTE (INIT_SIZE_BLK * AES_BLOCK_SIZE)
 
-	#define AES_BLOCK_SIZE  16
-	#define AES_KEY_SIZE    32 /*16*/
-	#define INIT_SIZE_BLK   8
-	#define INIT_SIZE_BYTE (INIT_SIZE_BLK * AES_BLOCK_SIZE)
-	
-	#if defined _MSC_VER || defined XMRIG_ARM
-	#define ABI_ATTRIBUTE
-	#else
-	#define ABI_ATTRIBUTE __attribute__((ms_abi))
-	#endif
+#if defined _MSC_VER || defined XMRIG_ARM
+#define ABI_ATTRIBUTE
+#else
+#define ABI_ATTRIBUTE __attribute__((ms_abi))
+#endif
 
-	#include <unistd.h>
 
-	#ifdef __GNUC__
-	#   include <x86intrin.h>
-	#else
-	#   include <intrin.h>
-	#   define __restrict__ __restrict
-	#endif
+#ifdef __GNUC__
+#include <unistd.h>
+#   include <x86intrin.h>
+#else
+#   include <intrin.h>
+#   define __restrict__ __restrict
+#endif
 
 	struct cryptonight_ctx;
 	typedef void(*cn_mainloop_fun_ms_abi)(cryptonight_ctx*) ABI_ATTRIBUTE;
@@ -78,18 +68,20 @@ extern "C"
 		int variant;
 		uint64_t height;
 
-		bool match(const int v, const uint64_t h) const { return (v == variant) && (h == height); }
+		bool match(const int v, const uint64_t h) const
+		{
+			return (v == variant) && (h == height);
+		}
 	};
 
 	struct cryptonight_ctx
 	{
-		
 		cryptonight_ctx();
-		
+
 		~cryptonight_ctx();
-		
-		alignas(16) uint8_t state[224];
-		alignas(16) uint8_t *memory;
+
+		VAR_ALIGN(16, uint8_t state[224]);
+		VAR_ALIGN(16, uint8_t* memory);
 
 		uint8_t unused[40];
 		const uint32_t* saes_table;
@@ -108,15 +100,16 @@ class CryptoNight
 public:
 	static bool selfTest();
 	static bool hash(const Job & job, JobResult & result, cryptonight_ctx** ctx);
-	
+
 	template<Variant VARIANT>
 	static bool hash_t(const Job & job, JobResult & result, cryptonight_ctx** ctx);
-	
+
 private:
 	static bool cryptonight_test();
-	
+
 	template<Variant VARIANT>
-	static void cryptonight_hash_ctx(uint8_t *__restrict__ output, const uint8_t *__restrict__ input, size_t size, cryptonight_ctx **__restrict__ ctx, const uint64_t height);
+	static void cryptonight_hash_ctx(uint8_t* __restrict__ output, const uint8_t* __restrict__ input, size_t size,
+	                                 cryptonight_ctx** __restrict__ ctx, const uint64_t height);
 };
 
 #endif

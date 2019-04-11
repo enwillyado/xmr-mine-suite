@@ -27,27 +27,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\res\app.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\res\app.ico" />
-    <None Include="..\src\config.json">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\src\Finder.h" />
     <ClInclude Include="..\src\version.h" />
+    <ClInclude Include="..\src\Workers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Finder.cpp" />
-    <ClCompile Include="..\src\finderApp.cpp" />
+    <ClCompile Include="..\src\Workers.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>finder</ProjectName>
     <ProjectGuid>{2F7A35B2-0B9E-43F4-8E6C-B24FE4A5B9D3}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-debug|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-debug|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-releasex|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-release|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
@@ -92,7 +102,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-debug|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
       <Optimization>Disabled</Optimization>
@@ -109,11 +119,14 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -133,11 +146,14 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -159,12 +175,15 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-debug|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <SmallerTypeCheck>true</SmallerTypeCheck>
@@ -180,6 +199,9 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|Win32'">
     <ClCompile>
@@ -192,7 +214,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -205,6 +227,9 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|Win32'">
     <ClCompile>
@@ -217,7 +242,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -232,6 +257,9 @@
       <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

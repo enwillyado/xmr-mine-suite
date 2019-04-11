@@ -27,19 +27,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\res\app.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\res\app.ico" />
-    <None Include="..\src\config.json">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_comun.cpp" />
     <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_unix.cpp" />
     <ClCompile Include="..\src\3rdparty\w_sistema\w_sistema_thread_win.cpp" />
     <ClCompile Include="..\src\3rdparty\w_tcp\tcpclient.cpp" />
+    <ClCompile Include="..\src\3rdparty\w_tcp\tcpserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\3rdparty\align.h" />
@@ -47,6 +39,7 @@
     <ClInclude Include="..\src\3rdparty\vs\inttypes.h" />
     <ClInclude Include="..\src\3rdparty\w_sistema\w_sistema_thread.h" />
     <ClInclude Include="..\src\3rdparty\w_tcp\tcpclient.h" />
+    <ClInclude Include="..\src\3rdparty\w_tcp\tcpserver.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>3rdparty</ProjectName>
@@ -115,12 +108,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-debug|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
       <Optimization>Disabled</Optimization>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -138,7 +131,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-release|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -150,6 +142,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -163,7 +156,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='vc-releasex|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,6 +169,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -191,11 +184,11 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\..\src\</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>XMRIG_NO_DONATE;XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS;APP_DEBUG</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <SmallerTypeCheck>true</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>APP_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(ProjectName)$(Platform)d.pdb</ProgramDatabaseFile>
@@ -221,11 +214,11 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -247,13 +240,13 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>XMRIG_NO_HTTPD;XMRIG_NO_GOOGLE_BREAKPAD;XMRIG_NO_API;XMRIG_NO_AEON;__STDC_FORMAT_MACROS</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>SyncCThrow</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>

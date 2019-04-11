@@ -34,15 +34,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\res\resource.h" />
-    <ClInclude Include="..\src\AllInOne.h" />
     <ClInclude Include="..\src\version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AllInOne.cpp" />
-    <ClCompile Include="..\src\AllInOneApp.cpp" />
+    <ClCompile Include="..\src\finderApp.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>all-in-one</ProjectName>
+    <ProjectName>finderApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -103,7 +101,7 @@
       <ProgramDatabaseFile>$(ProjectName)$(Platform)d.pdb</ProgramDatabaseFile>
       <MapExports>true</MapExports>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;finder-x$(PlatformArchitecture)d.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -127,7 +125,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;finder-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -153,7 +151,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;finder-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -174,7 +172,7 @@
       <MapExports>true</MapExports>
       <AssemblyDebug>true</AssemblyDebug>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)d.lib;miner-x$(PlatformArchitecture)d.lib;finder-x$(PlatformArchitecture)d.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -199,7 +197,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture).lib;miner-x$(PlatformArchitecture).lib;finder-x$(PlatformArchitecture).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -226,7 +224,7 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>3rdparty-x$(PlatformArchitecture)x.lib;miner-x$(PlatformArchitecture)x.lib;finder-x$(PlatformArchitecture)x.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\..\build\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

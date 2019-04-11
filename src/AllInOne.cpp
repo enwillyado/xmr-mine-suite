@@ -98,6 +98,17 @@ public:
 			{
 				target = x[i + 2];
 			}
+			else if(xi == "height")
+			{
+				height = x[i + 1];
+				for(size_t iii = 0; iii < height.size(); ++iii)
+				{
+					if(height[iii] < '0' || height[iii] > '9')
+					{
+						height[iii] = ' ';
+					}
+				}
+			}
 			else if(xi == "id")
 			{
 				if(x[i + 1] == ":")
@@ -128,7 +139,18 @@ public:
 
 		while(true)
 		{
-			Miner::Exec(blob, target, &PrivateFinder::OnNonce, actual);
+			if(blob != "")
+			{
+				Miner::Exec(blob, target, atoi(height.c_str()), &PrivateFinder::OnNonce, actual);
+			}
+			else
+			{
+#ifdef __GNU__
+				sleep(1);
+#else
+				Sleep(1);
+#endif
+			}
 		}
 	}
 
@@ -168,6 +190,7 @@ public:
 	size_t actual;
 	std::string blob;
 	std::string target;
+	std::string height;
 	std::string job_id;
 	std::string id;
 };

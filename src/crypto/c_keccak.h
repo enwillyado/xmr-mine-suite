@@ -18,9 +18,9 @@
 // compute a keccak hash (md) of given byte length from "in"
 int keccak(const uint8_t* in, int inlen, uint8_t* md, int mdlen);
 
-inline void keccak200(const uint8_t *in, int inlen, uint8_t *md)
+inline void keccak200(const uint8_t* in, int inlen, uint8_t* md)
 {
-    keccak(in, inlen, md, 200);
+	keccak(in, inlen, md, 200);
 }
 
 // update the state

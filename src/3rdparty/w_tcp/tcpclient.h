@@ -9,7 +9,9 @@
 #include <string>       //string
 
 #ifdef _WIN32
-#include <WinSock.h> //socket
+#include <winsock2.h>
+#include <ws2ipdef.h>
+#include <ws2tcpip.h>
 
 // Need to link exe with some libs
 #pragma comment (lib, "Ws2_32.lib")
@@ -19,6 +21,7 @@
 #include <sys/socket.h> //socket
 #include <arpa/inet.h>  //inet_addr
 #include <netdb.h>		//hostent
+#include <unistd.h>		//write
 #endif
 
 /**

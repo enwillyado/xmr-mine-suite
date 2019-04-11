@@ -27,9 +27,6 @@
 
 #include <stdio.h>
 #include <string.h>		//strlen
-#include <sys/socket.h>
-#include <arpa/inet.h>	//inet_addr
-#include <unistd.h>		//write
 
 int create()
 {
@@ -62,8 +59,8 @@ tcp_client::tcp_client()
 
 std::string resolve_address(const std::string & address)
 {
-	struct addrinfo * addr_info;
 	char client_sock_ip[INET6_ADDRSTRLEN];
+	struct addrinfo* addr_info;
 	memset(client_sock_ip, '\0', sizeof(client_sock_ip));
 	int errcode = getaddrinfo(address.c_str(), NULL, NULL, &addr_info);
 	if(errcode != 0)
@@ -72,11 +69,12 @@ std::string resolve_address(const std::string & address)
 	}
 	else
 	{
-		for(struct addrinfo * res = addr_info; res != NULL; res = res->ai_next)
+		for(struct addrinfo* res = addr_info; res != NULL; res = res->ai_next)
 		{
 			if(res->ai_family == AF_INET)
 			{
-				if(NULL == inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, client_sock_ip, sizeof(client_sock_ip)))
+				if(NULL == inet_ntop(AF_INET, &((struct sockaddr_in*)res->ai_addr)->sin_addr, client_sock_ip,
+				                     sizeof(client_sock_ip)))
 				{
 					perror("inet_ntop");
 				}
@@ -89,7 +87,6 @@ std::string resolve_address(const std::string & address)
 			}
 		}
 	}
-	
 	//plain ip address
 	return client_sock_ip;
 }
@@ -122,9 +119,9 @@ bool tcp_client::conn(const std::string & address, const int port)
 		}
 
 	}
-	
+
 	server.sin_addr.s_addr = inet_addr(resolve(address).c_str());
-	
+
 	server.sin_family = AF_INET;
 	server.sin_port = htons(port);
 
@@ -177,7 +174,11 @@ std::string tcp_client::receive(const int size)
 			{
 				perror("Recv failed");
 			}
+#ifdef __GNU__
 			sleep(1);
+#else
+			Sleep(1);
+#endif
 		}
 
 		delete [] buffer;
@@ -187,16 +188,32 @@ std::string tcp_client::receive(const int size)
 
 bool tcp_client::stop()
 {
+	bool ret = true;
 	connected = false;
-	
-	if (sock == -1)
+
+	if(sock == -1)
 	{
 		return false;
 	}
-	
+
+#ifndef WIN32
 	shutdown(sock, SHUT_RDWR);
 	close(sock);
+#else
+	// shutdown the connection since we're done
+	const int iResult = shutdown(sock, SD_SEND);
+	if(iResult == SOCKET_ERROR)
+	{
+		perror("shutdown failed with error");
+		ret = false;
+	}
+
+	// cleanup
+	closesocket(sock);
+	WSACleanup();
+#endif
+
 	sock = -1;
-	
-	return true;
+
+	return ret;
 }

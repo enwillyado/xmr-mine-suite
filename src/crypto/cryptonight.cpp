@@ -47,6 +47,8 @@ bool CryptoNight::hash(const Job & job, JobResult & result, cryptonight_ctx** ct
 		fprintf(stderr, "Invalid VARIANT!\n");
 		abort();
 	}
+
+	return false;
 }
 
 template<Variant VARIANT>

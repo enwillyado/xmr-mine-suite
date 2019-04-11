@@ -1,6 +1,6 @@
 /* FINDER APP (connect to host and broadcast to workers)
  * Start a worker proxy server on tcp port [$1=DEFAULT] to broadcast jobs,
-	and connect to host [$2=DEFAULT] on port [$3=DEFAULT] 
+	and connect to host [$2=DEFAULT] on port [$3=DEFAULT]
 						with user [$4=DEFAULT] and password [$5=DEFAULT]
 						using as agent [$6=DEFAULT] to get jobs.
  */
@@ -27,6 +27,11 @@ std::string getString(const char* str, std::string def)
 
 int main(int argc, char** argv)
 {
+#ifdef _WIN32
+	signal(SIGINT, my_handler);
+	signal(SIGTERM, my_handler);
+	signal(SIGABRT, my_handler);
+#else
 	struct sigaction sigIntHandler;
 
 	sigIntHandler.sa_handler = my_handler;
@@ -34,11 +39,12 @@ int main(int argc, char** argv)
 	sigIntHandler.sa_flags = 0;
 
 	sigaction(SIGINT, &sigIntHandler, NULL);
+#endif
 
 	// Params:
 	//
 	const int workersport = (argc > 1 ? atoi(argv[1]) : DEFAULT_WORKERS_PORT);
-	
+
 	const std::string serverhost = getString(argc > 2 ? argv[2] : NULL, DEFAULT_HOST);
 	const int serverport = (argc > 3 ? atoi(argv[3]) : DEFAULT_PORT);
 	const std::string user = getString(argc > 4 ? argv[4] : NULL, DEFAULT_USER);
