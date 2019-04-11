@@ -12,7 +12,7 @@
 #include <unistd.h>		//write
 #endif
 
-static bool InitialisingWSA()
+extern bool InitialisingWSA()
 {
 #ifdef _WINSOCKAPI_
 	static WSADATA wsaData;
@@ -28,6 +28,12 @@ static bool InitialisingWSA()
 tcp_server::tcp_server()
 {
 	static const bool c = InitialisingWSA();
+	if(c == false)
+	{
+		return;
+	}
+
+	socket_desc = -1;
 }
 
 void tcp_server::getMessage(const int client_sock, const std::string & client_sock_ip,
@@ -142,9 +148,14 @@ void tcp_server::start()
 		client_sock = accept(socket_desc, clientadd, (socklen_t*)&c);
 		if(client_sock < 0)
 		{
+#ifdef __GNUC__
 			perror("accept failed");
+#else
+			wprintf(L"accept failed with error: %ld\n", WSAGetLastError());
+#endif
 			continue;
 		}
+
 #ifndef NDEBUG
 		puts("Connection accepted");
 #endif

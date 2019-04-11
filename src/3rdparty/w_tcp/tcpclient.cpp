@@ -28,22 +28,15 @@
 #include <stdio.h>
 #include <string.h>		//strlen
 
-static bool InitialisingWSA()
-{
-#ifdef _WINSOCKAPI_
-	static WSADATA wsaData;
-	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		perror("Initialising Winsock failed");
-		return false;
-	}
-#endif
-	return true;
-};
+extern bool InitialisingWSA();
 
 tcp_client::tcp_client()
 {
 	static const bool c = InitialisingWSA();
+	if(c == false)
+	{
+		return;
+	}
 
 	sock = -1;
 	port = 0;
@@ -111,7 +104,6 @@ bool tcp_client::conn(const std::string & address, const int port)
 		{
 			perror("Could not create socket");
 		}
-
 	}
 
 	server.sin_addr.s_addr = inet_addr(resolve(address).c_str());

@@ -513,10 +513,15 @@ int Finder::Exec(const int workers_tcp_port,
 	tcp_client::resolve(DEFAULT_HOST);
 
 	bool exit = true;
+	bool hide = false;
 	do
 	{
-		std::cout << APP_PRENOM << "Menu" << (exit ? " (press 'h' to get help!)" : "") << ":" << std::endl;
+		if(false == hide)
+		{
+			std::cout << APP_PRENOM << "Menu" << (exit ? " (press 'h' to get help!)" : "") << ":" << std::endl;
+		}
 		exit = false;
+		hide = false;
 
 		const char c = getch();
 		switch(c)
@@ -607,6 +612,10 @@ int Finder::Exec(const int workers_tcp_port,
 			}
 		}
 		break;
+
+		case 10 :
+			hide = true;
+			break;
 
 		default:
 			std::cout << "'" << (isprint(c) ? (char)c : (int)c) << "' is not a valid option." << std::endl;

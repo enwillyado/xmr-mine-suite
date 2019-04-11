@@ -13,22 +13,15 @@
 
 #pragma comment(lib,"ws2_32.lib") //Winsock Library
 
-static bool InitialisingWSA()
-{
-#ifdef _WINSOCKAPI_
-	static WSADATA wsaData;
-	if(WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		perror("Initialising Winsock failed");
-		return false;
-	}
-#endif
-	return true;
-};
+extern bool InitialisingWSA();
 
 bool udp_client::send(const std::string & host, const int port, const std::string & message)
 {
 	static const bool c = InitialisingWSA();
+	if(c == false)
+	{
+		return false;
+	}
 
 	//create socket
 	const SOCKET s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -54,7 +47,11 @@ bool udp_client::send(const std::string & host, const int port, const std::strin
 	}
 
 	closesocket(s);
+
+#ifdef ONLY_ONE_UDP_BROADCAST
+	// https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-wsacleanup
 	WSACleanup();
+#endif
 
 	return true;
 }
