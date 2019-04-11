@@ -195,7 +195,11 @@ void WThread::setDefaults()
 
 	// Área de datos
 	this->ptrData = NULL;
+#ifdef _WIN32
 	this->handle = NULL;
+#else
+	this->handle = pthread_t();
+#endif
 	this->idThread = 0;
 
 	//

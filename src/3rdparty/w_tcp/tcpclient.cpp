@@ -174,7 +174,7 @@ std::string tcp_client::receive(const int size)
 			{
 				perror("Recv failed");
 			}
-#ifdef __GNU__
+#ifdef __GNUC__
 			sleep(1);
 #else
 			Sleep(1);

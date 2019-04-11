@@ -1,4 +1,4 @@
-/* MINER APP
+/* WORKER APP
  * Only mine a job [$1], iterate nonce target [$2] from start [$3=0] to end [$4=-1].
  */
 

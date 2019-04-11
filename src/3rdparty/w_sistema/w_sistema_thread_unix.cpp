@@ -19,9 +19,9 @@ static void* functionAuxiliar(void* ptrData)
 	const WThread* threadHijo = (const WThread*)(ptrData);
 
 	// Ajustar su PID
-	pthread_t pid = pthread_self();
 #ifdef SI_SE_PUDIERA
-	if(threadHijo->threadPadre != NULL)
+	pthread_t pid = pthread_self();
+	if(threadHijo->threadPadre != pthread_t())
 	{
 		threadHijo->threadPadre->pidThread = pid;
 	}
@@ -35,7 +35,7 @@ static void* functionAuxiliar(void* ptrData)
 	delete threadHijo;
 
 	// Retornar
-	return NULL;
+	return pthread_t();
 }
 
 /**
@@ -51,7 +51,7 @@ WThread::Estado WThread::start()
 	}
 
 	// Crear un ára de datos en memoria compartida (dinámica)
-	if(this->threadHijo == NULL)
+	if(this->threadHijo == pthread_t())
 	{
 		this->threadHijo = (WThread*)this->clone();
 		this->threadHijo->threadPadre = this;
@@ -93,7 +93,9 @@ WThread::Estado WThread::end()
 		this->started = false;
 
 		// Y liberar ya el descriptor
-		this->handle = NULL;
+		this->handle = pthread_t();
+
+		return WThread::SIN_ERROR;
 	}
 	else
 	{
@@ -109,7 +111,7 @@ WThread::Estado WThread::end()
 **/
 WThread::Estado WThread::finish()
 {
-	if(this->handle == NULL)
+	if(this->handle == pthread_t())
 	{
 		// Ya no existe
 		return WThread::NO_EXISTE;
@@ -124,7 +126,7 @@ WThread::Estado WThread::finish()
 	}
 
 	// Liberar el descriptor
-	this->handle = NULL;
+	this->handle = pthread_t();
 
 	// Todo ha ido bien
 	return WThread::SIN_ERROR;

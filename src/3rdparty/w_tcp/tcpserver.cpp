@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <string.h>		//strlen
-#ifdef __GNU__
+#ifdef __GNUC__
 #include <sys/socket.h>
 #include <arpa/inet.h>	//inet_addr
 #include <unistd.h>		//write
@@ -21,7 +21,7 @@ void tcp_server::getMessage(const int client_sock, const std::string & client_so
 void tcp_server::sendMessage(const int client_sock, const std::string & response)
 {
 	//Send the message back to client
-#ifdef __GNU__
+#ifdef __GNUC__
 	if(0 > write(client_sock, response.c_str(), response.size()))
 #else
 	if(0 > ::send(client_sock, response.c_str(), response.size(), 0))
@@ -38,14 +38,14 @@ void tcp_server::getDisconect(const int client_sock, const std::string & client_
 
 void tcp_server::disconectClient(const int client_sock)
 {
-#ifdef __GNU__
+#ifdef __GNUC__
 	close(client_sock);
 #else
 	closesocket(socket_desc);
 #endif
 }
 
-#ifndef __GNU__
+#ifndef __GNUC__
 static WSADATA & InitializeWSA()
 {
 	// Initialize Winsock
@@ -60,7 +60,7 @@ static WSADATA & InitializeWSA()
 
 tcp_server::tcp_server()
 {
-#ifndef __GNU__
+#ifndef __GNUC__
 	static WSADATA wsaData = InitializeWSA();
 #endif
 }
@@ -88,7 +88,7 @@ bool tcp_server::create(const int port)
 
 	int tr = 1;
 
-#ifdef __GNU__
+#ifdef __GNUC__
 	// kill "Address already in use" error message
 	if(setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, &tr, sizeof(int)) == -1)
 	{
@@ -188,7 +188,7 @@ bool tcp_server::stop()
 		return false;
 	}
 
-#ifdef __GNU__
+#ifdef __GNUC__
 	shutdown(socket_desc, SHUT_RDWR);
 	close(socket_desc);
 #else

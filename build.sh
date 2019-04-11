@@ -39,8 +39,8 @@ g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/crypto/
 g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_C   -c -I../src/ ../src/crypto/cryptonightR_template.S
 ar rcsvouU miner.a  cryptonight.o cryptonight_v.o cryptonightR_template.o c_blake256.o c_groestl.o c_jh.o c_keccak.o c_skein.o Job.o miner.o
 
-g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/3rdparty/w_tcp/tcpclient.cpp ../src/3rdparty/w_tcp/tcpserver.cpp # ../src/3rdparty/w_sistema/w_sistema_thread_comun.cpp ../src/3rdparty/w_sistema/w_sistema_thread_unix.cpp  ../src/3rdparty/w_sistema/w_sistema_thread_win.cpp 
-ar rcsvouU 3rdparty.a  tcpclient.o tcpserver.o # w_sistema_thread_comun.o w_sistema_thread_unix.o w_sistema_thread_win.o
+g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/3rdparty/w_tcp/tcpclient.cpp ../src/3rdparty/w_tcp/tcpserver.cpp ../src/3rdparty/w_sistema/w_sistema_thread_comun.cpp ../src/3rdparty/w_sistema/w_sistema_thread_unix.cpp  ../src/3rdparty/w_sistema/w_sistema_thread_win.cpp 
+ar rcsvouU 3rdparty.a  tcpclient.o tcpserver.o w_sistema_thread_comun.o w_sistema_thread_unix.o w_sistema_thread_win.o
 
 g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/minerApp.cpp ../src/minerWorker.cpp
 g++ $FLAGS_BASIC $FLAGS_COMPILER $FLAGS_COMPILER_CPP -c -I../src/ ../src/Finder.cpp ../src/Workers.cpp ../src/finderApp.cpp

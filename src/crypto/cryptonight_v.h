@@ -28,6 +28,10 @@
 
 #include <math.h>
 
+#ifdef __GNUC__
+#include <fenv.h>
+#endif
+
 // VARIANT ALTERATIONS
 #ifndef XMRIG_ARM
 #   define VARIANT1_INIT(part) \
